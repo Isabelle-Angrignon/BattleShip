@@ -1,0 +1,2 @@
+C:\Users\Isabelle\Documents\GitHub\BattleShip\Battleship\bin\Debug\Battleship.exe.config
+C:\Users\Isabelle\Documents\GitHub\BattleShip\bin\Debug\Battleship.exe.config
