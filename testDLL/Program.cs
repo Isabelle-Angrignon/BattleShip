@@ -13,6 +13,10 @@ namespace testDLL
         {
             Flotte maFlotte = new Flotte();
 
+            maFlotte._flotte[0]._pos[0].setPos(1, 1);
+            maFlotte._flotte[4]._pos[0].setPos(9, 9);
+
+
             Console.WriteLine("Mes navires: ");
             for (int i = 0; i < 5; ++i)
             {

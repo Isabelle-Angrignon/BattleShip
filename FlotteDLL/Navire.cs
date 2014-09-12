@@ -22,6 +22,10 @@ namespace FlotteDLL
             if (nbCases <= MAX_CASES && nbCases >= MIN_CASES)// valide le format du navire
             {
                 this._pos = new Pos[nbCases];
+                for (int p = 0; p < nbCases; ++p)
+                {
+                    this._pos[p] = new Pos();
+                }
             }         
         } 
         private void definirPosition(int noCase, Pos position)

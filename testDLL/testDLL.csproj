@@ -32,7 +32,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FlotteDLL">
+    <Reference Include="FlotteDLL, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\FlotteDLL\bin\Debug\FlotteDLL.dll</HintPath>
     </Reference>
     <Reference Include="System" />
