@@ -17,6 +17,7 @@ namespace testDLL
             for (int i = 0; i < 5; ++i)
             {
                 Console.WriteLine(maFlotte._flotte[i]);
+                Console.WriteLine(maFlotte._flotte[i]._pos[0]);
             }
 
             Console.ReadKey();

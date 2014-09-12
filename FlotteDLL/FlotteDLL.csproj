@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="Flotte.cs" />
     <Compile Include="Navire.cs" />
+    <Compile Include="Pos.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
