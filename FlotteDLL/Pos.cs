@@ -24,6 +24,7 @@ namespace FlotteDLL
             colonnes = new String[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
         }
 
+        // Exemple de format:  A1  J10
         public override string ToString()
         {             
             int noLigne = _y + 1;

@@ -51,7 +51,16 @@ namespace FlotteDLL
         }
         public override string ToString()
         {
-            return this.getNom() + "(" + this._pos.Length + ")";
+            String navire = this.getNom() + "=";
+            //jusqu'à lAvant dernier, il y a une virgule.
+            for (int p = 0; p < this._pos.Length-1; ++p)
+            { 
+                navire += this._pos[p].ToString() +  ","; 
+            }
+            //La derniere pos...
+            navire += this._pos[this._pos.Length - 1].ToString() + ";"; 
+
+            return navire;
         }
     }
 }
