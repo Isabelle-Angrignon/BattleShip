@@ -13,9 +13,9 @@ namespace CommClient
         Socket sock;
         IPEndPoint IPE;
 
-        public CommClient()
+        public CommClient(String IP , int NumPort)
         {
-            IPE = new IPEndPoint(IPAddress.Parse("127.0.0.1"), 1223);
+            IPE = new IPEndPoint(IPAddress.Parse(IP), NumPort);
             sock = new Socket(
                 AddressFamily.InterNetwork,
                 SocketType.Stream,

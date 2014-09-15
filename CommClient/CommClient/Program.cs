@@ -11,7 +11,7 @@ namespace CommClient
         static void Main(string[] args)
         {
             Console.WriteLine("Tentative de connexion");
-            CommClient Communication = new CommClient();
+            CommClient Communication = new CommClient("127.0.0.1", 8088);
             Console.WriteLine("Connexion Réussi");
             Console.ReadKey();
         }
