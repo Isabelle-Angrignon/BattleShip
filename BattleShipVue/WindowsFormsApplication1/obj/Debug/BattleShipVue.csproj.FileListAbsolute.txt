@@ -15,3 +15,5 @@ D:\Client-Serveur\BattleShip\BattleShipVue\WindowsFormsApplication1\obj\Debug\Ba
 D:\Client-Serveur\BattleShip\BattleShipVue\WindowsFormsApplication1\obj\Debug\BattleShipVue.MainFrame.resources
 D:\Client-Serveur\BattleShip\BattleShipVue\WindowsFormsApplication1\obj\Debug\BattleShipVue.Properties.Resources.resources
 D:\Client-Serveur\BattleShip\BattleShipVue\WindowsFormsApplication1\obj\Debug\BattleShipVue.csproj.GenerateResource.Cache
+D:\Client-Serveur\BattleShip\BattleShipVue\WindowsFormsApplication1\bin\Debug\FlotteDLL.dll
+D:\Client-Serveur\BattleShip\BattleShipVue\WindowsFormsApplication1\bin\Debug\FlotteDLL.pdb

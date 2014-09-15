@@ -28,19 +28,24 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.DGV_MaGrille = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.BTN_Placer = new System.Windows.Forms.Button();
             this.panel2 = new System.Windows.Forms.Panel();
             this.BTN_Attaquer = new System.Windows.Forms.Button();
             this.DGV_GrilleEnemi = new System.Windows.Forms.DataGridView();
             this.BattleShip = new System.Windows.Forms.Label();
             this.TB_Log = new System.Windows.Forms.TextBox();
-            this.BTN_Placer = new System.Windows.Forms.Button();
+            this.menuStrip1 = new System.Windows.Forms.MenuStrip();
+            this.actionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.recommencerPartieToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quitterToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.DGV_MaGrille)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DGV_GrilleEnemi)).BeginInit();
+            this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // DGV_MaGrille
@@ -53,13 +58,13 @@
             this.DGV_MaGrille.Location = new System.Drawing.Point(24, 32);
             this.DGV_MaGrille.Name = "DGV_MaGrille";
             this.DGV_MaGrille.ReadOnly = true;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            this.DGV_MaGrille.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            this.DGV_MaGrille.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.DGV_MaGrille.RowHeadersWidth = 55;
             this.DGV_MaGrille.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.DGV_MaGrille.RowTemplate.Height = 29;
@@ -68,7 +73,6 @@
             this.DGV_MaGrille.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect;
             this.DGV_MaGrille.Size = new System.Drawing.Size(374, 313);
             this.DGV_MaGrille.TabIndex = 0;
-            this.DGV_MaGrille.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DGV_MaGrille_CellContentClick);
             this.DGV_MaGrille.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.DGV_RowPrePaint);
             this.DGV_MaGrille.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
             this.DGV_MaGrille.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DGV_MaGrille_MouseUp);
@@ -82,6 +86,17 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(424, 405);
             this.panel1.TabIndex = 1;
+            // 
+            // BTN_Placer
+            // 
+            this.BTN_Placer.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTN_Placer.Location = new System.Drawing.Point(24, 351);
+            this.BTN_Placer.Name = "BTN_Placer";
+            this.BTN_Placer.Size = new System.Drawing.Size(374, 49);
+            this.BTN_Placer.TabIndex = 1;
+            this.BTN_Placer.Text = "Placer ce bateau";
+            this.BTN_Placer.UseVisualStyleBackColor = true;
+            this.BTN_Placer.Click += new System.EventHandler(this.BTN_Placer_Click);
             // 
             // panel2
             // 
@@ -146,16 +161,38 @@
             this.TB_Log.Size = new System.Drawing.Size(858, 126);
             this.TB_Log.TabIndex = 4;
             // 
-            // BTN_Placer
+            // menuStrip1
             // 
-            this.BTN_Placer.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BTN_Placer.Location = new System.Drawing.Point(24, 351);
-            this.BTN_Placer.Name = "BTN_Placer";
-            this.BTN_Placer.Size = new System.Drawing.Size(374, 49);
-            this.BTN_Placer.TabIndex = 1;
-            this.BTN_Placer.Text = "Placer ce bateau";
-            this.BTN_Placer.UseVisualStyleBackColor = true;
-            this.BTN_Placer.Click += new System.EventHandler(this.BTN_Placer_Click);
+            this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.actionsToolStripMenuItem});
+            this.menuStrip1.Location = new System.Drawing.Point(0, 0);
+            this.menuStrip1.Name = "menuStrip1";
+            this.menuStrip1.Size = new System.Drawing.Size(883, 24);
+            this.menuStrip1.TabIndex = 5;
+            this.menuStrip1.Text = "menuStrip1";
+            // 
+            // actionsToolStripMenuItem
+            // 
+            this.actionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.recommencerPartieToolStripMenuItem,
+            this.quitterToolStripMenuItem});
+            this.actionsToolStripMenuItem.Name = "actionsToolStripMenuItem";
+            this.actionsToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
+            this.actionsToolStripMenuItem.Text = "Actions";
+            // 
+            // recommencerPartieToolStripMenuItem
+            // 
+            this.recommencerPartieToolStripMenuItem.Name = "recommencerPartieToolStripMenuItem";
+            this.recommencerPartieToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.recommencerPartieToolStripMenuItem.Text = "Recommencer Partie";
+            this.recommencerPartieToolStripMenuItem.Click += new System.EventHandler(this.recommencerPartieToolStripMenuItem_Click);
+            // 
+            // quitterToolStripMenuItem
+            // 
+            this.quitterToolStripMenuItem.Name = "quitterToolStripMenuItem";
+            this.quitterToolStripMenuItem.Size = new System.Drawing.Size(184, 22);
+            this.quitterToolStripMenuItem.Text = "Quitter";
+            this.quitterToolStripMenuItem.Click += new System.EventHandler(this.quitterToolStripMenuItem_Click);
             // 
             // MainFrame
             // 
@@ -166,6 +203,8 @@
             this.Controls.Add(this.BattleShip);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
+            this.Controls.Add(this.menuStrip1);
+            this.MainMenuStrip = this.menuStrip1;
             this.Name = "MainFrame";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFrame_FormClosing);
@@ -173,6 +212,8 @@
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.DGV_GrilleEnemi)).EndInit();
+            this.menuStrip1.ResumeLayout(false);
+            this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -188,6 +229,10 @@
         private System.Windows.Forms.Label BattleShip;
         private System.Windows.Forms.TextBox TB_Log;
         private System.Windows.Forms.Button BTN_Placer;
+        private System.Windows.Forms.MenuStrip menuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem actionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem recommencerPartieToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem quitterToolStripMenuItem;
     }
 }
 

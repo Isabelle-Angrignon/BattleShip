@@ -12,11 +12,15 @@ using FlotteDLL;
 namespace BattleShipVue
 {
     public partial class MainFrame : Form
-    {
-        const int DIMENSION_GRILLE_X = 10;
-        const int DIMENSION_GRILLE_Y = 10;
+    { 
+        private int _selectedRow = -1;
+        private int _selectedColumn = -1;
+        private string nomBateauCourant = "";        
         public static string[] headerY = new string[DIMENSION_GRILLE_Y] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
         private Flotte maFlotte;
+
+        const int DIMENSION_GRILLE_X = 10;
+        const int DIMENSION_GRILLE_Y = 10;
         public MainFrame()
         {
             InitializeComponent();
@@ -38,6 +42,14 @@ namespace BattleShipVue
             }
         }
 
+        private void placerBateaux()
+        {
+            foreach(Navire navire in maFlotte._flotte)
+            {
+                ecrireAuLog("Veuillez placer votre " + navire._nom + "  (" + navire._pos.Length + ")");
+            }
+        }
+
         private void MainFrame_FormClosing(object sender, FormClosingEventArgs e)
         {
             String messageQuitter = "Êtes-vous sur de vouloir quitter cette partie? (Toute progression va être perdu)";
@@ -51,6 +63,16 @@ namespace BattleShipVue
                 // ENVOYER UN MESSAGE AU SERVEUR POUR LUI DIRE QUE JE QUITTE
             }
 
+        }
+
+        /// <summary>
+        /// Cette fonction prend le texte passer en paramêtre et l'ajoute au log
+        /// </summary>
+        /// <param name="text"></param>
+        private void ecrireAuLog(String text )
+        {
+            TB_Log.AppendText(text);
+            TB_Log.AppendText(Environment.NewLine);
         }
 
         /// <summary>
@@ -71,17 +93,10 @@ namespace BattleShipVue
             e.Handled = true;
         }
 
-        private void DGV_MaGrille_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
 
-        }
-
-        int _selectedRow = -1;
-        int _selectedColumn = -1;
         private void dataGridView1_SelectionChanged(object sender, EventArgs e)
         {
             DataGridView dgv = (DataGridView)sender;
-            TB_Log.Text = "";
             switch (DGV_MaGrille.SelectedCells.Count)
             {
                 case 0:
@@ -119,25 +134,26 @@ namespace BattleShipVue
             }
         }
 
-        private Point[] posBateauCourant(DataGridView dgv)
+        private Pos[] posBateauCourant(DataGridView dgv)
         {
-            Point[] tabPos = new Point[dgv.SelectedCells.Count];
+            Pos[] tabPos = new Pos[dgv.SelectedCells.Count];
             int compteurCell = 0;
             foreach (DataGridViewCell cell in dgv.SelectedCells)
             {
-                tabPos[compteurCell].X = cell.ColumnIndex;
-                tabPos[compteurCell].Y = cell.RowIndex;
+                tabPos[compteurCell] = new Pos();
+                tabPos[compteurCell]._x = cell.ColumnIndex;
+                tabPos[compteurCell]._y = cell.RowIndex;
                 ++compteurCell;
             }
 
             return tabPos;
         }
 
-        private bool validerConsecutivite(Point[] tabPos)
+        private bool validerConsecutivite(Pos[] tabPos)
         {
             bool estConsecutif = false;
-            int DifferenceX = Math.Abs(tabPos[0].X - tabPos[tabPos.Length - 1].X);
-            int DifferenceY = Math.Abs(tabPos[0].Y - tabPos[tabPos.Length - 1].Y);
+            int DifferenceX = Math.Abs(tabPos[0]._x - tabPos[tabPos.Length - 1]._x);
+            int DifferenceY = Math.Abs(tabPos[0]._y - tabPos[tabPos.Length - 1]._y);
 
             // Avec les possibilités de sélection réduit à une seule ligne droite (pas de diagonale),
             // si la sélection est valide (consécutive), la taille de la selection doit être égal à la différence entre la première
@@ -149,18 +165,18 @@ namespace BattleShipVue
 
             return estConsecutif;
         }
-        private bool validerPositionUnique(Point[] tabPos)
+        private bool validerPositionUnique(Pos[] tabPos)
         {
             bool estUnique = true;
 
             // Vérifie si les points sélectionnés correspondent au point d'un bateau déjà placé
             foreach(Navire navire in maFlotte._flotte)
-            { 
-                foreach(Point p in tabPos)
+            {
+                foreach (Pos p in tabPos)
                 {
                     for(int i = 0; i < navire._pos.Length; ++i)
                     {
-                        if(navire._pos[i]._x == p.X && navire._pos[i]._y == p.Y)
+                        if(navire._pos[i]._x == p._x && navire._pos[i]._y == p._y)
                         {
                             estUnique = false;
                         }
@@ -171,29 +187,57 @@ namespace BattleShipVue
             return estUnique;
         }
         private void setBackgroundColor_of_DGV(DataGridView dgv, Color couleur)
-        { 
-            Point[] tabPos = posBateauCourant(dgv);
-            foreach(Point p in tabPos)
+        {
+            Pos[] tabPos = posBateauCourant(dgv);
+            foreach (Pos p in tabPos)
             {
-                dgv.Rows[p.Y].Cells[p.X].Style.BackColor = couleur;
+                dgv.Rows[p._y].Cells[p._x].Style.BackColor = couleur;
             }
         }
         private void DGV_MaGrille_MouseUp(object sender, MouseEventArgs e)
         {
-            Point[] tabPos = posBateauCourant( (DataGridView)sender);
-            TB_Log.Text = validerConsecutivite(tabPos).ToString();
         }
+
 
 
 
         private void BTN_Placer_Click(object sender, EventArgs e)
         {
-            Point[] tabPos = posBateauCourant(DGV_MaGrille);
+            Pos[] tabPos = posBateauCourant(DGV_MaGrille);
             if (validerConsecutivite(tabPos))
             {
-
+                if(validerPositionUnique(tabPos))
+                {
+                    foreach(Navire navire in maFlotte._flotte)
+                    {
+                        if(navire._nom == nomBateauCourant)
+                        {
+                            navire.placerNavire(tabPos);
+                            ecrireAuLog("Le " + nomBateauCourant + " à été placé ");
+                            setBackgroundColor_of_DGV(DGV_MaGrille, Color.GreenYellow);
+                        }
+                    }  
+                }
+                else
+                {
+                    ecrireAuLog("Cette sélection n'est pas valide car elle contient une case déjà utilisé.");
+                }
             }
-            setBackgroundColor_of_DGV(DGV_MaGrille, Color.Green);
+            else
+            {
+                ecrireAuLog("Cette selection n'est pas valide car elle n'est pas consécutive.");
+            }
+            
+        }
+
+        private void recommencerPartieToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Application.Restart();
+        }
+
+        private void quitterToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }
