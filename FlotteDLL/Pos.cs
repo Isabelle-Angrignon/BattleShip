@@ -20,7 +20,7 @@ namespace FlotteDLL
         //Constructeur
         public Pos()
         {
-            setPos(0, 0);
+            setPos(-1, -1);//initialisé hors de la grille
             colonnes = new String[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
         }
 
