@@ -42,12 +42,10 @@ namespace BattleShipVue
             }
         }
 
-        private void placerBateaux()
+        private void placerBateaux(Navire navire)
         {
-            foreach(Navire navire in maFlotte._flotte)
-            {
-                ecrireAuLog("Veuillez placer votre " + navire._nom + "  (" + navire._pos.Length + ")");
-            }
+            ecrireAuLog("Veuillez placer votre " + navire._nom + "  (" + navire._pos.Length + ")");
+            nomBateauCourant = navire._nom;
         }
 
         private void MainFrame_FormClosing(object sender, FormClosingEventArgs e)
@@ -74,66 +72,6 @@ namespace BattleShipVue
             TB_Log.AppendText(text);
             TB_Log.AppendText(Environment.NewLine);
         }
-
-        /// <summary>
-        /// Cette fonction sert à enlever les icones de base dans les Row Headers des DGV
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void DGV_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
-        {
-            e.PaintCells(e.ClipBounds, DataGridViewPaintParts.All);
-
-            e.PaintHeader(DataGridViewPaintParts.Background
-                | DataGridViewPaintParts.Border
-                | DataGridViewPaintParts.Focus
-                | DataGridViewPaintParts.SelectionBackground
-                | DataGridViewPaintParts.ContentForeground);
-
-            e.Handled = true;
-        }
-
-
-        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
-        {
-            DataGridView dgv = (DataGridView)sender;
-            switch (DGV_MaGrille.SelectedCells.Count)
-            {
-                case 0:
-                    // store no current selection
-                    _selectedRow = -1;
-                    _selectedColumn = -1;
-                    return;
-                case 1:
-                    // store starting point for multi-select
-                    _selectedRow = dgv.SelectedCells[0].RowIndex;
-                    _selectedColumn = dgv.SelectedCells[0].ColumnIndex;
-                    return;
-            }
-            foreach (DataGridViewCell cell in dgv.SelectedCells)
-            {
-                if (cell.RowIndex == _selectedRow && dgv.SelectedCells.Count < 6)
-                {
-                    if (cell.ColumnIndex != _selectedColumn)
-                    {
-                        _selectedColumn = -1;
-                    }
-                }
-                else if (cell.ColumnIndex == _selectedColumn && dgv.SelectedCells.Count < 6)
-                {
-                    if (cell.RowIndex != _selectedRow)
-                    {
-                        _selectedRow = -1;
-                    }
-                }
-                // otherwise the cell selection is illegal - de-select
-                else
-                {
-                    cell.Selected = false;
-                }
-            }
-        }
-
         private Pos[] posBateauCourant(DataGridView dgv)
         {
             Pos[] tabPos = new Pos[dgv.SelectedCells.Count];
@@ -198,9 +136,6 @@ namespace BattleShipVue
         {
         }
 
-
-
-
         private void BTN_Placer_Click(object sender, EventArgs e)
         {
             Pos[] tabPos = posBateauCourant(DGV_MaGrille);
@@ -225,7 +160,7 @@ namespace BattleShipVue
             }
             else
             {
-                ecrireAuLog("Cette selection n'est pas valide car elle n'est pas consécutive.");
+                ecrireAuLog("Cette sélection n'est pas valide car elle n'est pas consécutive.");
             }
             
         }
@@ -238,6 +173,100 @@ namespace BattleShipVue
         private void quitterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
+        } 
+        
+        private void finDuTour()
+        {
+            DGV_GrilleEnemi.Enabled = false;
+            DGV_MaGrille.Enabled = false;
+            BTN_Attaquer.Enabled = false;
+            BTN_Placer.Enabled = false;
+
+            ecrireAuLog("Fin de votre tour. Veuillez patienter jusqu'à la fin du tour de votre adversaire.");
+        }
+
+        private String attaquer(Pos laCase)
+        {
+            finDuTour();
+//            String reponse = Comm.EnvoyerMessage("Attaque=" + laCase.ToString()); //////////////////////////////////////////////////////
+            debutDuTour();
+
+            return "jambon";
+        }
+
+        private String envoyerFlotte()
+        {
+            finDuTour();
+            //            String reponse = Comm.EnvoyerMessage("Flotte=" + maFlotte.ToString()); //////////////////////////////////////////////////////
+            debutDuTour();
+
+            return "Message qui nest pas supposer etre la car il faut enlever le commentaire";
+        }
+
+        private void debutDuTour()
+        {
+            DGV_GrilleEnemi.Enabled = true;
+            DGV_MaGrille.Enabled = true;
+            BTN_Attaquer.Enabled = true;
+            BTN_Placer.Enabled = true;
+
+            ecrireAuLog("Début de votre tour !");
+        }
+        /// <summary>
+        /// Cette fonction sert à enlever les icones de base dans les Row Headers des DGV
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DGV_RowPrePaint(object sender, DataGridViewRowPrePaintEventArgs e)
+        {
+            e.PaintCells(e.ClipBounds, DataGridViewPaintParts.All);
+
+            e.PaintHeader(DataGridViewPaintParts.Background
+                | DataGridViewPaintParts.Border
+                | DataGridViewPaintParts.Focus
+                | DataGridViewPaintParts.SelectionBackground
+                | DataGridViewPaintParts.ContentForeground);
+
+            e.Handled = true;
+        }
+        private void dataGridView1_SelectionChanged(object sender, EventArgs e)
+        {
+            DataGridView dgv = (DataGridView)sender;
+            switch (DGV_MaGrille.SelectedCells.Count)
+            {
+                case 0:
+                    // store no current selection
+                    _selectedRow = -1;
+                    _selectedColumn = -1;
+                    return;
+                case 1:
+                    // store starting point for multi-select
+                    _selectedRow = dgv.SelectedCells[0].RowIndex;
+                    _selectedColumn = dgv.SelectedCells[0].ColumnIndex;
+                    return;
+            }
+            foreach (DataGridViewCell cell in dgv.SelectedCells)
+            {
+                if (cell.RowIndex == _selectedRow && dgv.SelectedCells.Count < 6)
+                {
+                    if (cell.ColumnIndex != _selectedColumn)
+                    {
+                        _selectedColumn = -1;
+                    }
+                }
+                else if (cell.ColumnIndex == _selectedColumn && dgv.SelectedCells.Count < 6)
+                {
+                    if (cell.RowIndex != _selectedRow)
+                    {
+                        _selectedRow = -1;
+                    }
+                }
+                // otherwise the cell selection is illegal - de-select
+                else
+                {
+                    cell.Selected = false;
+                }
+            }
         }
     }
 }
