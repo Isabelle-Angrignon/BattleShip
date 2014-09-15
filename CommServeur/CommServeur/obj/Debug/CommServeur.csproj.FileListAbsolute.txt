@@ -1,0 +1,6 @@
+C:\Users\Simon\Documents\GitHub\BattleShip\CommServeur\CommServeur\bin\Debug\CommServeur.exe.config
+C:\Users\Simon\Documents\GitHub\BattleShip\CommServeur\CommServeur\obj\Debug\CommServeur.csprojResolveAssemblyReference.cache
+C:\Users\Simon\Documents\GitHub\BattleShip\CommServeur\CommServeur\bin\Debug\CommServeur.exe
+C:\Users\Simon\Documents\GitHub\BattleShip\CommServeur\CommServeur\bin\Debug\CommServeur.pdb
+C:\Users\Simon\Documents\GitHub\BattleShip\CommServeur\CommServeur\obj\Debug\CommServeur.exe
+C:\Users\Simon\Documents\GitHub\BattleShip\CommServeur\CommServeur\obj\Debug\CommServeur.pdb
