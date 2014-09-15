@@ -39,5 +39,16 @@ namespace FlotteDLL
             this._flotte[noNav].placerNavire(positions);
 
         }
+
+        public override string ToString()
+        {
+            String flotte = "";
+            //jusqu'à lAvant dernier, il y a une virgule.
+            for (int nav = 0; nav < this._flotte.Length; ++nav)
+            {
+                flotte += this._flotte[nav].ToString();
+            }
+            return flotte;
+        }
     }
 }
