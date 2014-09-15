@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using FlotteDLL;
 
 namespace BattleShipVue
 {
@@ -14,12 +15,14 @@ namespace BattleShipVue
     {
         const int DIMENSION_GRILLE_X = 10;
         const int DIMENSION_GRILLE_Y = 10;
-        string[] headerY = new string[DIMENSION_GRILLE_Y] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
+        public static string[] headerY = new string[DIMENSION_GRILLE_Y] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
+        private Flotte maFlotte;
         public MainFrame()
         {
             InitializeComponent();
             InitTheGrid(DGV_MaGrille);
             InitTheGrid(DGV_GrilleEnemi);
+            maFlotte = new Flotte();
         }
 
         private void InitTheGrid(DataGridView dgv)
@@ -79,7 +82,6 @@ namespace BattleShipVue
         {
             DataGridView dgv = (DataGridView)sender;
             TB_Log.Text = "";
-            int pou = 0;
             switch (DGV_MaGrille.SelectedCells.Count)
             {
                 case 0:
@@ -131,26 +133,67 @@ namespace BattleShipVue
             return tabPos;
         }
 
-        private bool validerPositions(Point[] tabPos)
+        private bool validerConsecutivite(Point[] tabPos)
         {
-            bool estValide = false;
+            bool estConsecutif = false;
             int DifferenceX = Math.Abs(tabPos[0].X - tabPos[tabPos.Length - 1].X);
             int DifferenceY = Math.Abs(tabPos[0].Y - tabPos[tabPos.Length - 1].Y);
 
             // Avec les possibilités de sélection réduit à une seule ligne droite (pas de diagonale),
-            // 
+            // si la sélection est valide (consécutive), la taille de la selection doit être égal à la différence entre la première
+            // et la dernière case
             if(DifferenceX + DifferenceY == tabPos.Length - 1)
             {
-                estValide = true;
+                estConsecutif = true;
             }
 
-            return estValide;
+            return estConsecutif;
         }
+        private bool validerPositionUnique(Point[] tabPos)
+        {
+            bool estUnique = true;
 
+            // Vérifie si les points sélectionnés correspondent au point d'un bateau déjà placé
+            foreach(Navire navire in maFlotte._flotte)
+            { 
+                foreach(Point p in tabPos)
+                {
+                    for(int i = 0; i < navire._pos.Length; ++i)
+                    {
+                        if(navire._pos[i]._x == p.X && navire._pos[i]._y == p.Y)
+                        {
+                            estUnique = false;
+                        }
+                    }
+                }
+            }
+
+            return estUnique;
+        }
+        private void setBackgroundColor_of_DGV(DataGridView dgv, Color couleur)
+        { 
+            Point[] tabPos = posBateauCourant(dgv);
+            foreach(Point p in tabPos)
+            {
+                dgv.Rows[p.Y].Cells[p.X].Style.BackColor = couleur;
+            }
+        }
         private void DGV_MaGrille_MouseUp(object sender, MouseEventArgs e)
         {
             Point[] tabPos = posBateauCourant( (DataGridView)sender);
-            TB_Log.Text = validerPositions(tabPos).ToString();
+            TB_Log.Text = validerConsecutivite(tabPos).ToString();
+        }
+
+
+
+        private void BTN_Placer_Click(object sender, EventArgs e)
+        {
+            Point[] tabPos = posBateauCourant(DGV_MaGrille);
+            if (validerConsecutivite(tabPos))
+            {
+
+            }
+            setBackgroundColor_of_DGV(DGV_MaGrille, Color.Green);
         }
     }
 }

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.DGV_MaGrille = new System.Windows.Forms.DataGridView();
             this.panel1 = new System.Windows.Forms.Panel();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -36,6 +36,7 @@
             this.DGV_GrilleEnemi = new System.Windows.Forms.DataGridView();
             this.BattleShip = new System.Windows.Forms.Label();
             this.TB_Log = new System.Windows.Forms.TextBox();
+            this.BTN_Placer = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.DGV_MaGrille)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -47,17 +48,18 @@
             this.DGV_MaGrille.AllowUserToResizeColumns = false;
             this.DGV_MaGrille.AllowUserToResizeRows = false;
             this.DGV_MaGrille.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.DGV_MaGrille.ColumnHeadersHeight = 21;
             this.DGV_MaGrille.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.DGV_MaGrille.Location = new System.Drawing.Point(24, 32);
             this.DGV_MaGrille.Name = "DGV_MaGrille";
             this.DGV_MaGrille.ReadOnly = true;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            this.DGV_MaGrille.RowHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            this.DGV_MaGrille.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.DGV_MaGrille.RowHeadersWidth = 55;
             this.DGV_MaGrille.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.DGV_MaGrille.RowTemplate.Height = 29;
@@ -74,6 +76,7 @@
             // panel1
             // 
             this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Controls.Add(this.BTN_Placer);
             this.panel1.Controls.Add(this.DGV_MaGrille);
             this.panel1.Location = new System.Drawing.Point(13, 116);
             this.panel1.Name = "panel1";
@@ -105,6 +108,7 @@
             this.DGV_GrilleEnemi.AllowUserToResizeColumns = false;
             this.DGV_GrilleEnemi.AllowUserToResizeRows = false;
             this.DGV_GrilleEnemi.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.DGV_GrilleEnemi.ColumnHeadersHeight = 21;
             this.DGV_GrilleEnemi.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.DGV_GrilleEnemi.Location = new System.Drawing.Point(27, 32);
             this.DGV_GrilleEnemi.MultiSelect = false;
@@ -142,6 +146,17 @@
             this.TB_Log.Size = new System.Drawing.Size(858, 126);
             this.TB_Log.TabIndex = 4;
             // 
+            // BTN_Placer
+            // 
+            this.BTN_Placer.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.BTN_Placer.Location = new System.Drawing.Point(24, 351);
+            this.BTN_Placer.Name = "BTN_Placer";
+            this.BTN_Placer.Size = new System.Drawing.Size(374, 49);
+            this.BTN_Placer.TabIndex = 1;
+            this.BTN_Placer.Text = "Placer ce bateau";
+            this.BTN_Placer.UseVisualStyleBackColor = true;
+            this.BTN_Placer.Click += new System.EventHandler(this.BTN_Placer_Click);
+            // 
             // MainFrame
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -172,6 +187,7 @@
         private System.Windows.Forms.DataGridView DGV_GrilleEnemi;
         private System.Windows.Forms.Label BattleShip;
         private System.Windows.Forms.TextBox TB_Log;
+        private System.Windows.Forms.Button BTN_Placer;
     }
 }
 
