@@ -1,0 +1,1 @@
+C:\Users\Isabelle\Documents\GitHub\BattleShip\ControleurServeur\bin\Debug\ControleurServeur.exe.config
