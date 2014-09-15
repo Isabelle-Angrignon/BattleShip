@@ -18,12 +18,13 @@ namespace testDLL
 
 
             Console.WriteLine("Mes navires: ");
-            for (int i = 0; i < 5; ++i)
+            Console.WriteLine(maFlotte);
+           /* for (int i = 0; i < 5; ++i)
             {
                 Console.WriteLine(maFlotte._flotte[i]);
-                Console.WriteLine(maFlotte._flotte[i]._pos[0]);
-            }
-
+                //Console.WriteLine(maFlotte._flotte[i]._pos[0]);
+            }*/
+            
             Console.ReadKey();
         }
     }
