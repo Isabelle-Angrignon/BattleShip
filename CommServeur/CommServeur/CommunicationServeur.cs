@@ -91,13 +91,17 @@ namespace CommServeur
             sock.Bind(Iep);
         }
 
+        public String Communiquer(int numeroJoueur, String Message)
+        {
+            return " hello word"; 
+        }
 
         /// <summary>
         /// Permet d'envoyer un message à un client 
         /// </summary>
         /// <param name="numeroJoueur">Le joueur auquel il faut envoyer le message</param>
         /// <param name="Message"> Le message qu'il faut envoyer </param>
-        public void EnvoyerMessage(int numeroJoueur, String Message)
+        private void EnvoyerMessage(int numeroJoueur, String Message)
         {
             if (numeroJoueur == 1)
             {
