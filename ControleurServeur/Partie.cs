@@ -51,6 +51,7 @@ namespace ControleurServeur
             //tant que partie 
             while (!partieEstFinie)
             {
+                
                 //demander de lancer une torpille;
                 //analyser le coup
                 //vérifier si touché
