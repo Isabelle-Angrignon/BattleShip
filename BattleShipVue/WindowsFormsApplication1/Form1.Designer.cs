@@ -74,7 +74,7 @@
             this.DGV_MaGrille.Size = new System.Drawing.Size(374, 313);
             this.DGV_MaGrille.TabIndex = 0;
             this.DGV_MaGrille.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.DGV_RowPrePaint);
-            this.DGV_MaGrille.SelectionChanged += new System.EventHandler(this.dataGridView1_SelectionChanged);
+            this.DGV_MaGrille.SelectionChanged += new System.EventHandler(this.DGV_MaGrille_SelectionChanged);
             this.DGV_MaGrille.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DGV_MaGrille_MouseUp);
             // 
             // panel1
@@ -110,6 +110,7 @@
             // 
             // BTN_Attaquer
             // 
+            this.BTN_Attaquer.Enabled = false;
             this.BTN_Attaquer.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.BTN_Attaquer.Location = new System.Drawing.Point(27, 350);
             this.BTN_Attaquer.Name = "BTN_Attaquer";
@@ -125,6 +126,7 @@
             this.DGV_GrilleEnemi.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.DGV_GrilleEnemi.ColumnHeadersHeight = 21;
             this.DGV_GrilleEnemi.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            this.DGV_GrilleEnemi.Enabled = false;
             this.DGV_GrilleEnemi.Location = new System.Drawing.Point(27, 32);
             this.DGV_GrilleEnemi.MultiSelect = false;
             this.DGV_GrilleEnemi.Name = "DGV_GrilleEnemi";
