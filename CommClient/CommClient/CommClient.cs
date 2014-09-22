@@ -12,6 +12,7 @@ namespace CommClient
     {
         Socket sock;
         IPEndPoint IPE;
+        static byte[] Buffer { get; set; }
 
         public CommClient(String IP , int NumPort)
         {
@@ -21,6 +22,36 @@ namespace CommClient
                 SocketType.Stream,
                 ProtocolType.Tcp);
             sock.Connect(IPE);
+        }
+
+        public String Communiquer(String Message)
+        {
+            EnvoyerMessage(Message);
+            return LireMessage();
+        }
+
+        public String LireMessage()
+        {
+            String Reponse = "";
+            while (Reponse == "")
+            {
+                Buffer = new byte[sock.SendBufferSize];
+                int bytesRead = sock.Receive(Buffer);
+                byte[] formatted = new byte[bytesRead];
+                for (int i = 0; i < bytesRead; i++)
+                {
+                    formatted[i] = Buffer[i];
+                }
+                Reponse = Encoding.ASCII.GetString(formatted);
+            }
+            return Reponse;
+        }
+
+
+        public void EnvoyerMessage(String Message)
+        {
+            byte[] data = Encoding.ASCII.GetBytes(Message);
+            sock.Send(data);
         }
     }
 }

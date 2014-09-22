@@ -13,7 +13,7 @@ namespace CommServeur
         Socket sockConn;
         Socket sockJoueur1 = null;
         Socket sockJoueur2 = null;
-        private int nbJoueurConnecter;
+        private int nbJoueurConnecter = 0;
         static byte[] Buffer { get; set; }
         bool J1Connecter = false;
         bool J2Connecter = false;
@@ -46,11 +46,11 @@ namespace CommServeur
         /// <param name="NbJoueurConnecter">Dis si on veut connecter un joueur ou deux </param>
         public void Connection(int NbJoueurAConnecter)
         {
-            if(J1Connecter != null && J2Connecter != null )
+            if(J1Connecter != false && J2Connecter != false )
             {
                 throw new Exception("Les joueurs sont déjà connecter ! ");
             }
-            else if (NbJoueurAConnecter >= 1 && NbJoueurAConnecter <= 2 && sockJoueur1 != null)
+            else if (NbJoueurAConnecter >= 1 && NbJoueurAConnecter <= 2 && sockJoueur1 == null)
             {
                 sockConn.Listen(1);
                 sockJoueur1 = sockConn.Accept();
@@ -91,42 +91,105 @@ namespace CommServeur
             sock.Bind(Iep);
         }
 
-        public String Communiquer(int numeroJoueur, String Message)
-        {
-            return " hello word"; 
-        }
+
 
         /// <summary>
         /// Permet d'envoyer un message à un client 
         /// </summary>
         /// <param name="numeroJoueur">Le joueur auquel il faut envoyer le message</param>
         /// <param name="Message"> Le message qu'il faut envoyer </param>
-        private void EnvoyerMessage(int numeroJoueur, String Message)
+        public void EnvoyerMessage(int numeroJoueur, String Message)
         {
-            if (numeroJoueur == 1)
+            if (numeroJoueur == 1 && J1EnvoiBloque == false)
             {
                 EnvoyerMessage(sockJoueur1, Message);
+                J1EnvoiBloque = true;
             }
-            if (numeroJoueur == 2)
+            else if (numeroJoueur == 1 && J1EnvoiBloque == true)
             {
-
-                EnvoyerMessage(sockJoueur2, Message);
+                throw new Exception("Vous devez lire le message du joueur 1 avant de lui envoyer un nouveau message ");
             }
-            if ( numeroJoueur != 1 || numeroJoueur != 2)
+
+
+            if (numeroJoueur == 2 && J2EnvoiBloque == false)
+            {
+                EnvoyerMessage(sockJoueur2, Message);
+                J2EnvoiBloque = true;
+            }
+            else if (numeroJoueur == 2 && J2EnvoiBloque == true)
+            {
+                throw new Exception("Vous devez lire le message du joueur 2 avant de lui envoyer un nouveau message ");
+            }
+
+
+
+            if ( numeroJoueur != 1 && numeroJoueur != 2)
             {
                 throw new Exception("Le numero de joueur peut seulement être 1 ou 2");
             }
+            
         }
 
 
         /// <summary>
-        /// 
+        /// Permet d'envoyer un message à un client 
         /// </summary>
         /// <param name="sock">Le socket auquel il faut envoyer le message</param>
         /// <param name="Message">Le message a envoyer</param>
         private void EnvoyerMessage(Socket sock, String Message)
         {
+            byte[] data = Encoding.ASCII.GetBytes(Message);
+            sock.Send(data);
+        }
 
+        public String LireMessage(int numeroJoueur)
+        {
+            String Reponse = "";
+            if (numeroJoueur == 1 && J1EnvoiBloque == true)
+            {
+                Reponse = LireMessage(sockJoueur1);
+                J1EnvoiBloque = false;
+            }
+            else if (numeroJoueur == 1 && J1EnvoiBloque == false)
+            {
+                throw new Exception("Il n'y a rien a lire pour le joueur 1 ");
+            }
+
+
+            if (numeroJoueur == 2 && J2EnvoiBloque == true)
+            {
+                Reponse = LireMessage(sockJoueur2);
+                J2EnvoiBloque = false;
+            }
+            else if (J2EnvoiBloque == false && numeroJoueur == 2)
+            {
+                throw new Exception("Il n'y a rien a lire pour le joueur 2 ");
+            }
+
+
+
+            if (numeroJoueur != 1 && numeroJoueur != 2)
+            {
+                throw new Exception("Le numero de joueur peut seulement être 1 ou 2");
+            }
+            return Reponse;
+        }
+
+        private String LireMessage(Socket sock)
+        {
+            String Reponse = "";
+            while (Reponse == "")
+            {
+                Buffer = new byte[sock.SendBufferSize];
+                int bytesRead = sock.Receive(Buffer);
+                byte[] formatted = new byte[bytesRead];
+                for (int i = 0; i < bytesRead; i++)
+                {
+                    formatted[i] = Buffer[i];
+                }
+                Reponse = Encoding.ASCII.GetString(formatted);
+            }
+            return Reponse;
         }
 
 
