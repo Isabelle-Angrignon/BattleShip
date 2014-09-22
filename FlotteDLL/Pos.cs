@@ -11,6 +11,7 @@ namespace FlotteDLL
         public String[] colonnes;
         public int _x;
         public int _y;
+        public bool _estTouche;
         public void setPos(int x, int y)
         {
             _x = x;
@@ -22,6 +23,7 @@ namespace FlotteDLL
         {
             setPos(-1,-1);//initialisé hors de la grille
             colonnes = new String[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
+            _estTouche = false;
         }
 
         // Exemple de format:  A1  J10

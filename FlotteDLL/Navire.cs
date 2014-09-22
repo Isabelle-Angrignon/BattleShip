@@ -14,11 +14,13 @@ namespace FlotteDLL
         //Attributs
         public String _nom;
         public Pos[] _pos;
+        public bool _estCoule;
 
         //Constructeur
         public Navire(int nbCases, string nom)
         {
             this._nom = nom;
+            this._estCoule = false;
             if (nbCases <= MAX_CASES && nbCases >= MIN_CASES)// valide le format du navire
             {
                 this._pos = new Pos[nbCases];
