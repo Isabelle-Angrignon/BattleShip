@@ -13,7 +13,13 @@ namespace CommClient
         Socket sock;
         IPEndPoint IPE;
         static byte[] Buffer { get; set; }
+        public String nom { get; set; }
 
+        /// <summary>
+        /// Constructeur de la classe
+        /// </summary>
+        /// <param name="IP"> L'ip du serveur</param>
+        /// <param name="NumPort"> Le port du serveur</param>
         public CommClient(String IP , int NumPort)
         {
             IPE = new IPEndPoint(IPAddress.Parse(IP), NumPort);
@@ -22,15 +28,20 @@ namespace CommClient
                 SocketType.Stream,
                 ProtocolType.Tcp);
             sock.Connect(IPE);
+            nom = LireMessage();
         }
-
+        /// <summary>
+        ///  Méthode blocante servant a envoyer un message au serveur et en obtenir une réponse
+        /// </summary>
+        /// <param name="Message"> Le messsage a envoyer</param>
+        /// <returns></returns>
         public String Communiquer(String Message)
         {
             EnvoyerMessage(Message);
             return LireMessage();
         }
 
-        public String LireMessage()
+        private String LireMessage()
         {
             String Reponse = "";
             while (Reponse == "")
@@ -48,7 +59,7 @@ namespace CommClient
         }
 
 
-        public void EnvoyerMessage(String Message)
+        private void EnvoyerMessage(String Message)
         {
             byte[] data = Encoding.ASCII.GetBytes(Message);
             sock.Send(data);

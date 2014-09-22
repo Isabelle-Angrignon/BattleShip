@@ -13,8 +13,7 @@ namespace CommClient
             Console.WriteLine("Tentative de connexion");
             CommClient Communication = new CommClient("127.0.0.1", 8088);
             Console.WriteLine("Connexion Réussi");
-            Console.WriteLine(Communication.LireMessage());
-            Communication.EnvoyerMessage("Je suis un prêt");
+            
             Console.ReadKey();
         }
     }

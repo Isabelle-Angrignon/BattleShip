@@ -55,12 +55,14 @@ namespace CommServeur
                 sockConn.Listen(1);
                 sockJoueur1 = sockConn.Accept();
                 J1Connecter = true;
+                EnvoyerMessage(1,"Joueur1");
 
                 if (NbJoueurAConnecter == 2)
                 {
                     sockConn.Listen(1);
                     sockJoueur2 = sockConn.Accept();
                     J2Connecter = true;
+                    EnvoyerMessage(2, "Joueur2");
                 }
             }
             else if (NbJoueurAConnecter >= 1 && NbJoueurAConnecter <= 2)
@@ -68,6 +70,7 @@ namespace CommServeur
                 sockConn.Listen(1);
                 sockJoueur2 = sockConn.Accept();
                 J2Connecter = true;
+                EnvoyerMessage(2, "Joueur2");
             }
             else
             {
