@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using FlotteDLL;
+using CommClient;
 
 namespace BattleShipVue
 {
@@ -20,9 +21,10 @@ namespace BattleShipVue
         private int positionCourante = 0; // représente la position du bateau qui doit être placé dans la flotte
         private Flotte maFlotte;
         private int grandeurBateauCourant = 0;
+        private CommClients comm = new CommClients("127.0.0.1", 8088);
         // Public
         public String nomJoueur;
-        public String nomEnemi;
+        public String nomEnemi = "Illuminati";
         public static string[] headerY = new string[DIMENSION_GRILLE_Y] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
         public const int DIMENSION_GRILLE_X = 10;
         public const int DIMENSION_GRILLE_Y = 10;
@@ -32,24 +34,19 @@ namespace BattleShipVue
             InitTheGrid(DGV_MaGrille);
             InitTheGrid(DGV_GrilleEnemi);
             maFlotte = new Flotte();
-             /*
-               Communication comm = new Communication();
-               nomJoueur = comm.getNomJoueur();
-               nomEnemi = comm.getNomEnemi();
-               ecrireAuLog("Bonjour" + nomJoueur + " ! ");
-               ecrireAuLog("En attente du joueur " + nomEnemi + " pour commencer la partie... ");
-               if(comm.CommencerPartie())
-               {
-                   debutPlacerFlotte();
-               }
-               else
-               {
-                   ecrireAuLog("En attente du joueur " + nomEnemi + "pour qu'il place ses bateaux... ");
-                   comm.EnvoyerMessage("Pret");
-                   debutPlacerFlotte();
-               }
-            */
 
+            nomJoueur = comm.nom;
+            finDuTour();
+            ecrireAuLog("Bonjour" + nomJoueur + " ! ");
+            ecrireAuLog("En attente du joueur " + nomEnemi + " pour commencer la partie... ");
+            String réponse = comm.Communiquer("Commencer partie");
+
+            if(réponse == "Attendre")
+            {
+                ecrireAuLog("En attente du joueur " + nomEnemi + "pour qu'il place ses bateaux... ");
+                comm.Communiquer("Ok");
+            }
+            debutDuTour();
             debutPlacerFlotte();
         }
 
@@ -80,7 +77,7 @@ namespace BattleShipVue
         private void MainFrame_FormClosing(object sender, FormClosingEventArgs e)
         {
             String messageQuitter = "Êtes-vous sur de vouloir quitter cette partie? (Toute progression va être perdu)";
-            String nomMessage = "?";
+            String nomMessage = "Vous êtes sur le point de quitter";
             if (MessageBox.Show(messageQuitter, nomMessage, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != System.Windows.Forms.DialogResult.Yes)
             {
                 e.Cancel = true;
@@ -91,7 +88,6 @@ namespace BattleShipVue
             }
 
         }
-
         /// <summary>
         /// Cette fonction prend le texte passer en paramêtre et l'ajoute au log
         /// </summary>
@@ -171,7 +167,6 @@ namespace BattleShipVue
         private void placerProchainBateau()
         {
             placerBateaux(maFlotte._flotte[positionCourante]);
-
         }
         /// <summary>
         /// Cette fonction vérifie si la sélection est de la même taille que le bateau courant
@@ -276,10 +271,13 @@ namespace BattleShipVue
             {
                 switch(message[0])
                 {
+                    case "Manqué": 
+                        Pos position = convertStringToPos(message[1]);
+                        dgvConcerne.Rows[position._y].Cells[position._x].Style.BackColor = Color.Yellow;
+                        return;
+
                     case "Touché": 
-                        Pos pos = new Pos();
-                        pos._x = int.Parse(message[1].Substring(0,1));
-                        pos._y = int.Parse(message[1].Substring(1,1));
+                        Pos pos = convertStringToPos(message[1]);
                         dgvConcerne.Rows[pos._y].Cells[pos._x].Style.BackColor = Color.Tomato;
                         return;
 
@@ -287,15 +285,14 @@ namespace BattleShipVue
                         coullerNavire(message[1],dgvConcerne);
                         return;
 
-                    case "Terminé": 
-                        if(message[1] == nomJoueur) 
-                        {
-                            ecrireAuLog("Vous avez gagnez ! ");
-                        }
-                        else
-                        {
-                            ecrireAuLog("Vous avez perdu ! ");
-                        }
+                    case "Gagnant": 
+                        ecrireAuLog("Vous avez gagnez ! ");
+                        TB_Log.BackColor = Color.Green;
+                        return;
+
+                    case "Perdant":
+                        ecrireAuLog("Vous avez perdu ! Meilleure chance la prochaine fois ! =) ");
+                        TB_Log.BackColor = Color.Red;
                         return;
 
                     default: 
@@ -329,6 +326,16 @@ namespace BattleShipVue
             return "jambon";
         }
 
+        private Pos convertStringToPos(String aConvertir)
+        {
+            Pos pos = new Pos();
+            if(aConvertir.Length > 1)
+            {
+                pos._x = int.Parse(aConvertir.Substring(0,1));
+                pos._y = int.Parse(aConvertir.Substring(1,1));
+            }
+            return pos;
+        }
         private String envoyerFlotte()
         {
             finDuTour();

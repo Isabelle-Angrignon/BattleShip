@@ -4,3 +4,6 @@ C:\Users\Simon\Documents\GitHub\BattleShip\CommClient\CommClient\bin\Debug\CommC
 C:\Users\Simon\Documents\GitHub\BattleShip\CommClient\CommClient\obj\Debug\CommClient.csprojResolveAssemblyReference.cache
 C:\Users\Simon\Documents\GitHub\BattleShip\CommClient\CommClient\obj\Debug\CommClient.exe
 C:\Users\Simon\Documents\GitHub\BattleShip\CommClient\CommClient\obj\Debug\CommClient.pdb
+D:\Client-Serveur\BattleShip\CommClient\CommClient\bin\Debug\CommClient.exe.config
+D:\Client-Serveur\BattleShip\CommClient\CommClient\obj\Debug\CommClient.exe
+D:\Client-Serveur\BattleShip\CommClient\CommClient\obj\Debug\CommClient.pdb
