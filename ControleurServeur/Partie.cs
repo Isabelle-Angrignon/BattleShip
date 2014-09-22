@@ -4,76 +4,132 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FlotteDLL;
+using CommServeur;
 
 namespace ControleurServeur
 {
     class Partie
     {
-        String joueur1;
-        String joueur2;
-        Flotte flotte1;
-        Flotte flotte2;
-        Flotte flotteAttaquee;
-        bool partieEstFinie;
-        bool tourPremierJoueur;
+        String _joueur1;
+        String _joueur2;
+        Flotte _flotte1;
+        Flotte _flotte2;
+
+
+        Flotte _flotteAttaquee;
+        int _attaquant;   // contient 1 ou 2 
+        bool _partieEstFinie;
+        bool _tourPremierJoueur; // true = 1 false = 2
 
         // + instance serveur
+        CommunicationServeur _comVersClient;
 
 
-        public void Partie()
+        public Partie()
         {
-            joueur1 = "Joueur 1";
-            joueur2 = "Joueur 2";
-            flotte1 = new Flotte();
-            flotte2 = new Flotte();
-            flotteAttaquee = flotte2;
-            partieEstFinie = false;
-            tourPremierJoueur = true;
-            //instancier le commServeur
+            _joueur1 = "Joueur 1";
+            _joueur2 = "Joueur 2";
+            _flotte1 = new Flotte();
+            _flotte2 = new Flotte();
+            _flotteAttaquee = _flotte2;            
+            _partieEstFinie = false;
+            _tourPremierJoueur = true;
+            _comVersClient = new CommunicationServeur("127.0.0.1", 8088);
+            _attaquant = 1;
+        }
+
+        void preparerPartie()
+        {
+            //démarrer le commServeur
+            _comVersClient.Connection(2);
+
+            _comVersClient.LireMessage(1);
+            _comVersClient.LireMessage(2);
+
+            //////////////   JOUEUR 1   ///////////
+            //envoyer message placez btx j1...
+            _comVersClient.EnvoyerMessage(1, "Placer");
+            _comVersClient.EnvoyerMessage(2, "Attendre");
+            //attendre client            
+            String flotteJ1 = _comVersClient.LireMessage(1);
+            //Interpréter le messagge contient flotte: reconstruit l'objet
+            _flotte1 = lireFlotte(flotteJ1);
+
+            //////////////   JOUEUR 2   ///////////
+            _comVersClient.LireMessage(2);
+            //envoyer message placez btx j2...
+            _comVersClient.EnvoyerMessage(2, "Placer");
+            _comVersClient.EnvoyerMessage(1, "Attendre");
+            //attendre client            
+            String flotteJ2 = _comVersClient.LireMessage(2);
+            //Interpréter le messagge contient flotte: reconstruit l'objet
+            _flotte2 = lireFlotte(flotteJ2);
+            _comVersClient.LireMessage(1);
         }
         
         public void demarrer()
         {
-            //démarrer le commServeur
-            //appel fonction connecter(2)
-            //...
-            //...
+            preparerPartie();            
 
-            //envoyer message placez btx j1...
-            placezVosBateaux(tourPremierJoueur);
-            //attendre client
-            String message1 = "";
-            //lire message du client, contient flotte
-            lireFlotte(1, message1);
-            //mise a jour grille 1
-
-            //envoyer message placez btx j2...
-            placezVosBateaux(!tourPremierJoueur);
-            //attendre client
-            String message2 = "";
-            //lire message du client, contient flotte
-            lireFlotte(2, message2);
-            //mise a jour grille 2
-
-            //tant que partie 
-            while (!partieEstFinie)
+            //tant que partie pas finie 
+            while (!_partieEstFinie)
             {    
                 //demander de lancer une torpille;
-                //recevoir une pos
-                //analyserTir = recoit un string
-                //avertir les joueurs  retourne le string 
-                //passer la main
-                //rafraichir les grilles des joueurs
-
-                //alterner joueur;
-                tourPremierJoueur = !tourPremierJoueur;
-                //changer la flotte attaquee
-                flotteAttaquee = accesFlotteAttaquee();
-            }
-            //afficher gagnant aux deux clients
+                _comVersClient.EnvoyerMessage(_attaquant, "Attaque");
+                //recevoir une pos recoit un string  retourne une pos
+                String tir = _comVersClient.LireMessage(_attaquant);
+                //analyserTir = 
+                String resultatTir = analyserTir(posDuTirAttaque(tir)); 
+                if(_partieEstFinie)
+                {
+                    _comVersClient.EnvoyerMessage(_attaquant, "Gagnant=" + resultatTir);
+                    alternerJoueur();
+                    _comVersClient.EnvoyerMessage(_attaquant, "Perdant=" + resultatTir);
+                    //lire réponse1
+                    //lire réponse2
+                    //redémarrer partie???   
+                    //réinitiaiser tout ou ...
+                    // System.Diagnostics.Process.Start(Application.ExecutablePath);                    
+                }
+                else
+                {
+                    //avertir les joueurs  retourne le string 
+                    _comVersClient.EnvoyerMessage(_attaquant, resultatTir);
+                    _comVersClient.LireMessage(_attaquant);
+                    alternerJoueur();
+                    _comVersClient.EnvoyerMessage(_attaquant, resultatTir);
+                    _comVersClient.LireMessage(_attaquant);                
+                }
+                //on recommence... 
+            }            
         }
         
         //Méthodes utilisées:
+
+        Pos posDuTirAttaque(String tir)
+        {
+            Pos p = new Pos();  
+            p._x = int.Parse(tir[0].ToString());
+            p._y = int.Parse(tir[1].ToString());
+            return p;
+        }
+
+        void alternerJoueur()
+        {
+            if(_attaquant == 1)
+            {
+                _attaquant = 2;
+            }
+            else
+            {
+                _attaquant = 1;
+            }
+            _tourPremierJoueur = !_tourPremierJoueur;
+            //changer la flotte attaquee
+            _flotteAttaquee = accesFlotteAttaquee();
+        }
+
+
 
         //analyserTir
         String analyserTir(Pos tir)
@@ -92,9 +148,9 @@ namespace ControleurServeur
                     //coulerBateau(nombateau, nojoueur)
                     navireAttaque._estCoule = true;
                     //Vérifie si tous les bateaux coulés
-                    partieEstFinie = PartieEstTerminee(flotteAttaquee);
+                    _partieEstFinie = PartieEstTerminee(_flotteAttaquee);
                     resultat = "Coulé=" + navireAttaque.getNom();
-                    if (partieEstFinie)
+                    if (_partieEstFinie)
                     {
                         resultat = ""+ tir._x + tir._y; //position qui a fait ganger
                     }
@@ -118,7 +174,7 @@ namespace ControleurServeur
         //pour le joueur attaqué.
         bool CaseTireeEstOccupee(Pos p)
         {
-            return !(flotteAttaquee._grille[p._x, p._y] == "");
+            return !(_flotteAttaquee._grille[p._x, p._y] == "");
         }
 
         bool bateauEstCoule(Navire nav)
@@ -150,7 +206,7 @@ namespace ControleurServeur
         //recuperer nom bateau
         String nombateauToucheEst(Pos p)
         {
-            return flotteAttaquee._grille[p._x, p._y].ToString();
+            return _flotteAttaquee._grille[p._x, p._y].ToString();
         }
 
         
@@ -197,13 +253,13 @@ namespace ControleurServeur
         String accesJoueurAttaquant()// celui qui gagne...
         {
             String nom="";
-            if (tourPremierJoueur)// si ce n'est pas le tour du premier joueur, c'est lui qui est attaqué. 
+            if (_tourPremierJoueur)// si ce n'est pas le tour du premier joueur, c'est lui qui est attaqué. 
             {
-                nom = joueur1;
+                nom = _joueur1;
             }
             else
             {
-                nom = joueur2;
+                nom =_joueur2;
             }
             return nom;
         }
@@ -212,13 +268,13 @@ namespace ControleurServeur
         Flotte accesFlotteAttaquee()
         {
             Flotte f;
-            if (!tourPremierJoueur)// si ce n'est pas le tour du premier joueur, c'est lui qui est attaqué. 
+            if (!_tourPremierJoueur)// si ce n'est pas le tour du premier joueur, c'est lui qui est attaqué. 
             {
-                f = flotte1;
+                f = _flotte1;
             }
             else 
             {
-                f = flotte2;
+                f = _flotte2;
             }
             return f;
         }        
@@ -242,7 +298,7 @@ namespace ControleurServeur
         }
 
         //lorsque le client envoi tous ses bateaux...
-        Flotte lireFlotte(int noJoueur, String flotte)
+        Flotte lireFlotte(String flotte)
         {
             Flotte f = new Flotte();
             //regex pour récupérer premier mot...
@@ -251,7 +307,7 @@ namespace ControleurServeur
             //Ex. partiel...
             Pos[] positions = new Pos[5];
             f._flotte[0]._pos = positions;
-
+            placerFlotteSurGrille(f);
             return f;
         }
 
