@@ -43,17 +43,17 @@ namespace ControleurServeur
             //démarrer le commServeur
             _comVersClient.Connection(2);
             System.Console.WriteLine("Socket connectes");
-            _comVersClient.LireMessage(1);
-            System.Console.WriteLine("joueur 1 connecte");
-            _comVersClient.LireMessage(2);
-            System.Console.WriteLine("joueur 2 connecte");
+            //_comVersClient.LireMessage(1);
+            //System.Console.WriteLine("joueur 1 connecte");
+            //_comVersClient.LireMessage(2);
+            //System.Console.WriteLine("joueur 2 connecte");
 
             //////////////   JOUEUR 1   ///////////
             //envoyer message placez btx j1...
-            _comVersClient.EnvoyerMessage(1, "Placer");
-            System.Console.WriteLine("joueur 1 envoye Placer ");
-            _comVersClient.EnvoyerMessage(2, "Attendre");
-            System.Console.WriteLine("joueur 2 envoye Attendre ");
+            //_comVersClient.EnvoyerMessage(1, "Placer");
+            //System.Console.WriteLine("joueur 1 envoye Placer ");
+            //_comVersClient.EnvoyerMessage(2, "Attendre");
+            //System.Console.WriteLine("joueur 2 envoye Attendre ");
             //attendre client            
             String flotteJ1 = _comVersClient.LireMessage(1);
             System.Console.WriteLine("joueur 1 recu Flotte ");
@@ -62,14 +62,14 @@ namespace ControleurServeur
             System.Console.WriteLine("joueur 1 traite flotte ");
 
             //////////////   JOUEUR 2   ///////////
-            _comVersClient.LireMessage(2);
-            System.Console.WriteLine("joueur 2 recu ok ");
-            //envoyer message placez btx j2...
-            _comVersClient.EnvoyerMessage(2, "Placer");
-            System.Console.WriteLine("joueur 2 envoye Placer ");
-            _comVersClient.EnvoyerMessage(1, "Attendre");
-            System.Console.WriteLine("joueur 1 envoye Attendre ");
-            //attendre client            
+            //_comVersClient.LireMessage(2);
+            //System.Console.WriteLine("joueur 2 recu ok ");
+            ////envoyer message placez btx j2...
+            //_comVersClient.EnvoyerMessage(2, "Placer");
+            //System.Console.WriteLine("joueur 2 envoye Placer ");
+            //_comVersClient.EnvoyerMessage(1, "Attendre");
+            //System.Console.WriteLine("joueur 1 envoye Attendre ");
+            ////attendre client            
             String flotteJ2 = _comVersClient.LireMessage(2);
             System.Console.WriteLine("joueur 2 recu Flotte ");
             //Interpréter le messagge contient flotte: reconstruit l'objet
