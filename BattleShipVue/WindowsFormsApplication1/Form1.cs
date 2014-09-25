@@ -34,12 +34,12 @@ namespace BattleShipVue
             InitTheGrid(DGV_MaGrille);
             InitTheGrid(DGV_GrilleEnemi);
             maFlotte = new Flotte();
+            comm = new CommClients("127.0.0.1", 8888);
         }
 
 
         private void MainFrame_Shown(object sender, EventArgs e)
         {
-            comm = new CommClients("127.0.0.1", 8888);
 
             nomJoueur = comm.nom;
             ecrireAuLog("Bonjour" + nomJoueur + " ! ");
