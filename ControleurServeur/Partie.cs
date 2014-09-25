@@ -9,7 +9,7 @@ using CommServeur;
 namespace ControleurServeur
 {
     class Partie
-    { //daren is testing git here 
+    {  
         String _joueur1;
         String _joueur2;
         Flotte _flotte1;
