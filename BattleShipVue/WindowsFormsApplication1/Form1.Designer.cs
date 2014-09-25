@@ -118,6 +118,7 @@
             this.BTN_Attaquer.TabIndex = 1;
             this.BTN_Attaquer.Text = "Attaquer";
             this.BTN_Attaquer.UseVisualStyleBackColor = true;
+            this.BTN_Attaquer.Click += new System.EventHandler(this.BTN_Attaquer_Click);
             // 
             // DGV_GrilleEnemi
             // 

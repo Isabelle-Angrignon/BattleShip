@@ -186,12 +186,8 @@ namespace BattleShipVue
             comm = new CommClients("172.17.104.103", 8888);
             nomJoueur = comm.nom;
             ecrireAuLog("Bonjour" + nomJoueur + " ! ");
-            if (nomJoueur == "Joueur1")
-            {
-                ecrireAuLog("En attente de votre adversaire pour commencer la partie... ");
-            }
-            String resultat = envoyerFlotte();
 
+            envoyerFlotte();
         }
 
         private void BTN_Placer_Click(object sender, EventArgs e)
@@ -254,7 +250,7 @@ namespace BattleShipVue
             BTN_Attaquer.Enabled = false;
             BTN_Placer.Enabled = false;
 
-            ecrireAuLog("Fin de votre tour. Veuillez patienter jusqu'à la fin du tour de votre adversaire.");
+            ecrireAuLog("En attente d'une réponse de votre adversaire.");
         }
 
         /// <summary>
@@ -272,6 +268,7 @@ namespace BattleShipVue
                     case "Manqué": 
                         Pos position = convertStringToPos(message[1]);
                         dgvConcerne.Rows[position._y].Cells[position._x].Style.BackColor = Color.Yellow;
+                        ecrireAuLog("Attaque manqué à la case : " + position._x.ToString() + ";" + position._y.ToString());
                         return;
 
                     case "Touché":
@@ -293,14 +290,16 @@ namespace BattleShipVue
                         ecrireAuLog("Vous avez perdu ! Meilleure chance la prochaine fois ! =) ");
                         TB_Log.BackColor = Color.Red;
                         return;
-
+                    
                     default: 
-                        ecrireAuLog("Il y a eu une erreur dans le terme 'Action' envoyé par le serveur");
                         return;
                 }
             }
             else
+            {
                 ecrireAuLog("Erreur ! Nombre de paramêtre insufisant dans le message du serveur.");
+            }
+                
         }
 
         private void bateauEstTouche(string position, DataGridView dgvConcerne)
@@ -328,7 +327,7 @@ namespace BattleShipVue
                 ecrireAuLog("Le bateau " + nomNavire + " n'est pas coullable car il est introuvable dans la flotte courrante.");
             }
         }
-        private String attaquer(Pos laCase)
+        private String attaquer()
         {
             finDuTour();
             string x = DGV_GrilleEnemi.SelectedCells[0].ColumnIndex.ToString();
@@ -349,13 +348,12 @@ namespace BattleShipVue
             }
             return pos;
         }
-        private String envoyerFlotte()
+        private void envoyerFlotte()
         {
             finDuTour();
-            String reponse = comm.Communiquer("Flotte:" + maFlotte.ToString()); 
+            String reponse = comm.Communiquer("Flotte:" + maFlotte.ToString());
             debutDuTour();
-
-            return reponse;
+            traiterMessageAttaque(reponse, DGV_MaGrille);
         }
 
         private void debutDuTour()
@@ -432,6 +430,19 @@ namespace BattleShipVue
             }
         }
 
+        private void BTN_Attaquer_Click(object sender, EventArgs e)
+        {
+            sequenceAttaque();
+        }
+
+        private void sequenceAttaque()
+        {
+            String reponse = attaquer();
+            traiterMessageAttaque(reponse, DGV_GrilleEnemi);
+            String attaqueEnemi = comm.Communiquer("Ok");
+            traiterMessageAttaque(attaqueEnemi, DGV_MaGrille);
+            
+        }
 
 
     }
