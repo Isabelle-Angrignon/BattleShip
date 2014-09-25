@@ -31,10 +31,10 @@ namespace ControleurServeur
             _joueur2 = "Joueur 2";
             _flotte1 = new Flotte();
             _flotte2 = new Flotte();
-            _flotteAttaquee = _flotte2;            
+            _flotteAttaquee = _flotte2;
             _partieEstFinie = false;
             _tourPremierJoueur = true;
-            _comVersClient = new CommunicationServeur("127.0.0.1", 8888);
+            _comVersClient = new CommunicationServeur("127.0.0.1", 8088);
             _attaquant = 1;
         }
 
@@ -42,57 +42,45 @@ namespace ControleurServeur
         {
             //démarrer le commServeur
             _comVersClient.Connection(2);
-            System.Console.WriteLine("Socket connectes");
-            //_comVersClient.LireMessage(1);
-            //System.Console.WriteLine("joueur 1 connecte");
-            //_comVersClient.LireMessage(2);
-            //System.Console.WriteLine("joueur 2 connecte");
+
+            _comVersClient.LireMessage(1);
+            _comVersClient.LireMessage(2);
 
             //////////////   JOUEUR 1   ///////////
             //envoyer message placez btx j1...
-            //_comVersClient.EnvoyerMessage(1, "Placer");
-            //System.Console.WriteLine("joueur 1 envoye Placer ");
-            //_comVersClient.EnvoyerMessage(2, "Attendre");
-            //System.Console.WriteLine("joueur 2 envoye Attendre ");
+            _comVersClient.EnvoyerMessage(1, "Placer");
+            _comVersClient.EnvoyerMessage(2, "Attendre");
             //attendre client            
             String flotteJ1 = _comVersClient.LireMessage(1);
-            System.Console.WriteLine("joueur 1 recu Flotte ");
             //Interpréter le messagge contient flotte: reconstruit l'objet
             _flotte1 = lireFlotte(flotteJ1);
-            System.Console.WriteLine("joueur 1 traite flotte ");
 
             //////////////   JOUEUR 2   ///////////
-            //_comVersClient.LireMessage(2);
-            //System.Console.WriteLine("joueur 2 recu ok ");
-            ////envoyer message placez btx j2...
-            //_comVersClient.EnvoyerMessage(2, "Placer");
-            //System.Console.WriteLine("joueur 2 envoye Placer ");
-            //_comVersClient.EnvoyerMessage(1, "Attendre");
-            //System.Console.WriteLine("joueur 1 envoye Attendre ");
-            ////attendre client            
+            _comVersClient.LireMessage(2);
+            //envoyer message placez btx j2...
+            _comVersClient.EnvoyerMessage(2, "Placer");
+            _comVersClient.EnvoyerMessage(1, "Attendre");
+            //attendre client            
             String flotteJ2 = _comVersClient.LireMessage(2);
-            System.Console.WriteLine("joueur 2 recu Flotte ");
             //Interpréter le messagge contient flotte: reconstruit l'objet
             _flotte2 = lireFlotte(flotteJ2);
-            System.Console.WriteLine("joueur 2 traite flotte ");
             _comVersClient.LireMessage(1);
-            System.Console.WriteLine("joueur 1 recu ok ");
         }
-        
+
         public void demarrer()
         {
-            preparerPartie();            
+            preparerPartie();
 
             //tant que partie pas finie 
             while (!_partieEstFinie)
-            {    
+            {
                 //demander de lancer une torpille;
                 _comVersClient.EnvoyerMessage(_attaquant, "Attaque");
                 //recevoir une pos recoit un string  retourne une pos
                 String tir = _comVersClient.LireMessage(_attaquant);
                 //analyserTir = 
-                String resultatTir = analyserTir(posDuTirAttaque(tir)); 
-                if(_partieEstFinie)
+                String resultatTir = analyserTir(stringToPos(tir));
+                if (_partieEstFinie)
                 {
                     _comVersClient.EnvoyerMessage(_attaquant, "Gagnant=" + resultatTir);
                     alternerJoueur();
@@ -110,17 +98,17 @@ namespace ControleurServeur
                     _comVersClient.LireMessage(_attaquant);
                     alternerJoueur();
                     _comVersClient.EnvoyerMessage(_attaquant, resultatTir);
-                    _comVersClient.LireMessage(_attaquant);                
+                    _comVersClient.LireMessage(_attaquant);
                 }
                 //on recommence... 
-            }            
+            }
         }
-        
+
         //Méthodes utilisées:
 
-        Pos posDuTirAttaque(String tir)
+        Pos stringToPos(String tir)
         {
-            Pos p = new Pos();  
+            Pos p = new Pos();
             p._x = int.Parse(tir[0].ToString());
             p._y = int.Parse(tir[1].ToString());
             return p;
@@ -128,7 +116,7 @@ namespace ControleurServeur
 
         void alternerJoueur()
         {
-            if(_attaquant == 1)
+            if (_attaquant == 1)
             {
                 _attaquant = 2;
             }
@@ -153,8 +141,8 @@ namespace ControleurServeur
                 Navire navireAttaque = trouverNavireAttaque(nombateauToucheEst(tir));
                 //marquer touché 
                 toucherBateau(navireAttaque, tir);
-                    //Vérifie si bateau coulé
-                
+                //Vérifie si bateau coulé
+
                 if (bateauEstCoule(navireAttaque))
                 {
                     //coulerBateau(nombateau, nojoueur)
@@ -164,9 +152,9 @@ namespace ControleurServeur
                     resultat = "Coulé=" + navireAttaque.getNom();
                     if (_partieEstFinie)
                     {
-                        resultat = ""+ tir._x + tir._y; //position qui a fait ganger
+                        resultat = "" + tir._x + tir._y; //position qui a fait ganger
                     }
-                } 
+                }
                 else
                 {
                     //touché, non coulé
@@ -177,7 +165,7 @@ namespace ControleurServeur
             {
                 resultat = "Manqué=" + tir._x + tir._y;
             }
-              
+
             return resultat;
         }
 
@@ -192,7 +180,7 @@ namespace ControleurServeur
         bool bateauEstCoule(Navire nav)
         {
             bool estCoule = true;
-            for (int p = 0; p < nav._pos.Length && estCoule == true; ++p )
+            for (int p = 0; p < nav._pos.Length && estCoule == true; ++p)
             {
                 if (nav._pos[p]._estTouche == false)
                 {
@@ -221,16 +209,16 @@ namespace ControleurServeur
             return _flotteAttaquee._grille[p._x, p._y].ToString();
         }
 
-        
+
         void toucherBateau(Navire nav, Pos p)
         {
-            int indice  = trouverIndicePosition(nav, p);
-           nav._pos[indice]._estTouche = true;
+            int indice = trouverIndicePosition(nav, p);
+            nav._pos[indice]._estTouche = true;
         }
 
         int trouverIndicePosition(Navire nav, Pos p)
         {
-            int indice = 0; 
+            int indice = 0;
             while (nav._pos[indice] != p && indice < nav._pos.Length)
             {
                 ++indice;
@@ -257,25 +245,25 @@ namespace ControleurServeur
                 return null;
             }
             else
-            {                
+            {
                 return flotte._flotte[nav];
-            }           
+            }
         }
 
         String accesJoueurAttaquant()// celui qui gagne...
         {
-            String nom="";
+            String nom = "";
             if (_tourPremierJoueur)// si ce n'est pas le tour du premier joueur, c'est lui qui est attaqué. 
             {
                 nom = _joueur1;
             }
             else
             {
-                nom =_joueur2;
+                nom = _joueur2;
             }
             return nom;
         }
-        
+
         //retourne la flotte dont c'est le tour a jouer
         Flotte accesFlotteAttaquee()
         {
@@ -284,13 +272,13 @@ namespace ControleurServeur
             {
                 f = _flotte1;
             }
-            else 
+            else
             {
                 f = _flotte2;
             }
             return f;
-        }        
-                
+        }
+
 
         //affichage d'invite au joueur:
         String placezVosBateaux(bool premierJoueur)
@@ -313,13 +301,29 @@ namespace ControleurServeur
         Flotte lireFlotte(String flotte)
         {
             Flotte f = new Flotte();
-            //regex pour récupérer premier mot...
-            //si premier mot est "Flotte" alors regex chaque navires.
 
-            //Ex. partiel...
-            Pos[] positions = new Pos[5];
-            f._flotte[0]._pos = positions;
-            placerFlotteSurGrille(f);
+            String listeNav = flotte.Split(':')[1]; // ex: Flotte=Premierbateau=Pos1Pos2;EtLesSuivants....
+            String[] tabNavires = listeNav.Split(';'); // une ligne Premierbateau=Pos1,Pos2 par élément du tableau
+
+            String[] infoNav;  //Une seule ligne du genre Premierbateau=Pos1,Pos2
+            String nomNav;     // Premierbateau
+            String lisPosNav; // Pos1,Pos2
+            int compteNav = 0;
+            foreach (String navire in tabNavires)
+            {
+                infoNav = navire.Split('=');
+                nomNav = infoNav[0];
+                lisPosNav = infoNav[1];
+                String[] tabPos = lisPosNav.Split(',');
+                f._flotte[compteNav]._nom = nomNav;
+                int comptePos = 0;
+                foreach (String coord in tabPos)
+                {
+                    f._flotte[compteNav]._pos[comptePos] = stringToPos(coord);
+                    ++comptePos;
+                }
+                ++compteNav;
+            }
             return f;
         }
 
@@ -327,14 +331,14 @@ namespace ControleurServeur
         //sert 2 fois au début.
         void placerFlotteSurGrille(Flotte joueur)
         {
-            foreach(Navire navire in joueur._flotte)
+            foreach (Navire navire in joueur._flotte)
             {
                 //identifier ses positions sur la grille
-                foreach(Pos p in navire._pos)
+                foreach (Pos p in navire._pos)
                 {
                     joueur._grille[p._x, p._y] = navire.getNom();// sera append... avec _touche_coule
                 }
             }
-        }        
+        }
     }
 }
