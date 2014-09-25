@@ -14,3 +14,6 @@ C:\Users\Simon\Documents\GitHub\BattleShip\ControleurServeur\bin\Debug\Controleu
 C:\Users\Simon\Documents\GitHub\BattleShip\ControleurServeur\bin\Debug\FlotteDLL.dll
 C:\Users\Simon\Documents\GitHub\BattleShip\ControleurServeur\bin\Debug\FlotteDLL.pdb
 C:\Users\Simon\Documents\GitHub\BattleShip\ControleurServeur\obj\Debug\ControleurServeur.csprojResolveAssemblyReference.cache
+C:\Users\198749626\Documents\GitHub\BattleShip\ControleurServeur\bin\Debug\ControleurServeur.exe.config
+C:\Users\198749626\Documents\GitHub\BattleShip\ControleurServeur\obj\Debug\ControleurServeur.exe
+C:\Users\198749626\Documents\GitHub\BattleShip\ControleurServeur\obj\Debug\ControleurServeur.pdb
