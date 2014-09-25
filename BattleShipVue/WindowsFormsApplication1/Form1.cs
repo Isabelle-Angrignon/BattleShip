@@ -21,7 +21,7 @@ namespace BattleShipVue
         private int positionCourante = 0; // représente la position du bateau qui doit être placé dans la flotte
         private Flotte maFlotte;
         private int grandeurBateauCourant = 0;
-        private CommClients comm = new CommClients("127.0.0.1", 8088);
+        private CommClients comm;
         // Public
         public String nomJoueur;
         public String nomEnemi = "Illuminati";
@@ -34,19 +34,25 @@ namespace BattleShipVue
             InitTheGrid(DGV_MaGrille);
             InitTheGrid(DGV_GrilleEnemi);
             maFlotte = new Flotte();
+        }
+        private void MainFrame_Load(object sender, EventArgs e)
+        {
+            comm = new CommClients("172.17.104.103", 8888);
 
             nomJoueur = comm.nom;
-            finDuTour();
             ecrireAuLog("Bonjour" + nomJoueur + " ! ");
-            ecrireAuLog("En attente du joueur " + nomEnemi + " pour commencer la partie... ");
-            String réponse = comm.Communiquer("Commencer partie");
+            if (nomJoueur == "joueur1")
+            {
+                ecrireAuLog("En attente du joueur " + nomEnemi + " pour commencer la partie... ");
+            }
+            String reponse = comm.Communiquer("Commencer partie");
 
-            if(réponse == "Attendre")
+            if (reponse == "Attendre")
             {
                 ecrireAuLog("En attente du joueur " + nomEnemi + "pour qu'il place ses bateaux... ");
                 comm.Communiquer("Ok");
             }
-            debutDuTour();
+            debutDuTour("Placer bateaux");
             debutPlacerFlotte();
         }
 
@@ -194,6 +200,11 @@ namespace BattleShipVue
             BTN_Placer.Enabled = false;
             BTN_Attaquer.Enabled = true;
             DGV_MaGrille.Enabled = false;
+
+            traiterMessageAttaque("Manqué=83", DGV_GrilleEnemi);
+            traiterMessageAttaque("Touché=24", DGV_GrilleEnemi);
+            traiterMessageAttaque("Coullé=porte-avion", DGV_GrilleEnemi);
+            traiterMessageAttaque("Gagnant=11", DGV_GrilleEnemi);
         }
 
         private void BTN_Placer_Click(object sender, EventArgs e)
@@ -276,21 +287,22 @@ namespace BattleShipVue
                         dgvConcerne.Rows[position._y].Cells[position._x].Style.BackColor = Color.Yellow;
                         return;
 
-                    case "Touché": 
-                        Pos pos = convertStringToPos(message[1]);
-                        dgvConcerne.Rows[pos._y].Cells[pos._x].Style.BackColor = Color.Tomato;
+                    case "Touché":
+                        bateauEstTouche(message[1], dgvConcerne);
                         return;
 
                     case "Coullé": 
                         coullerNavire(message[1],dgvConcerne);
                         return;
 
-                    case "Gagnant": 
+                    case "Gagnant":
+                        bateauEstTouche(message[1], dgvConcerne);
                         ecrireAuLog("Vous avez gagnez ! ");
                         TB_Log.BackColor = Color.Green;
                         return;
 
                     case "Perdant":
+                        bateauEstTouche(message[1], dgvConcerne);
                         ecrireAuLog("Vous avez perdu ! Meilleure chance la prochaine fois ! =) ");
                         TB_Log.BackColor = Color.Red;
                         return;
@@ -304,8 +316,14 @@ namespace BattleShipVue
                 ecrireAuLog("Erreur ! Nombre de paramêtre insufisant dans le message du serveur.");
         }
 
+        private void bateauEstTouche(string position, DataGridView dgvConcerne)
+        {
+            Pos pos = convertStringToPos(position);
+            dgvConcerne.Rows[pos._y].Cells[pos._x].Style.BackColor = Color.Tomato;
+        }
         private void coullerNavire(String nomNavire, DataGridView dgv)
         {
+            bool estTrouve = false;
             foreach(Navire nav in maFlotte._flotte)
             {
                 if(nav._nom == nomNavire)
@@ -313,15 +331,23 @@ namespace BattleShipVue
                     foreach (Pos pos in nav._pos)
                     {
                         dgv.Rows[pos._y].Cells[pos._x].Style.BackColor = Color.Red;
+                        estTrouve = true;
                     }
                 }
+            }
+
+            if(!estTrouve)
+            {
+                ecrireAuLog("Le bateau " + nomNavire + " n'est pas coullable car il est introuvable dans la flotte courrante.");
             }
         }
         private String attaquer(Pos laCase)
         {
             finDuTour();
-//            String reponse = Comm.EnvoyerMessage("Attaque=" + laCase.ToString()); //////////////////////////////////////////////////////
-            debutDuTour();
+            string x = DGV_GrilleEnemi.SelectedCells[0].ColumnIndex.ToString();
+            string y = DGV_GrilleEnemi.SelectedCells[0].RowIndex.ToString();
+            String reponse = comm.Communiquer("Attaque=" + x + y);
+            debutDuTour("Attaquer");
 
             return "jambon";
         }
@@ -340,18 +366,24 @@ namespace BattleShipVue
         {
             finDuTour();
             //            String reponse = Comm.EnvoyerMessage("Flotte=" + maFlotte.ToString()); //////////////////////////////////////////////////////
-            debutDuTour();
+            debutDuTour("Attaquer");
 
             return "Message qui nest pas supposer etre la car il faut enlever le commentaire";
         }
 
-        private void debutDuTour()
+        private void debutDuTour(string nomTour)
         {
-            DGV_GrilleEnemi.Enabled = true;
-            DGV_MaGrille.Enabled = true;
-            BTN_Attaquer.Enabled = true;
-            BTN_Placer.Enabled = true;
-
+            if(nomTour == "Placer bateaux")
+            {
+                DGV_MaGrille.Enabled = true;
+                BTN_Placer.Enabled = true;
+            }
+            else if (nomTour == "Attaquer")
+            {
+                DGV_GrilleEnemi.Enabled = true;
+                BTN_Attaquer.Enabled = true;
+            }
+            
             ecrireAuLog("Début de votre tour !");
         }
         /// <summary>
@@ -420,5 +452,6 @@ namespace BattleShipVue
                 }
             }
         }
+
     }
 }
