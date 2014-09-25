@@ -35,7 +35,9 @@ namespace BattleShipVue
             InitTheGrid(DGV_GrilleEnemi);
             maFlotte = new Flotte();
         }
-        private void MainFrame_Load(object sender, EventArgs e)
+
+
+        private void MainFrame_Shown(object sender, EventArgs e)
         {
             comm = new CommClients("127.0.0.1", 8888);
 
@@ -200,11 +202,6 @@ namespace BattleShipVue
             BTN_Placer.Enabled = false;
             BTN_Attaquer.Enabled = true;
             DGV_MaGrille.Enabled = false;
-
-            traiterMessageAttaque("Manqué=83", DGV_GrilleEnemi);
-            traiterMessageAttaque("Touché=24", DGV_GrilleEnemi);
-            traiterMessageAttaque("Coullé=porte-avion", DGV_GrilleEnemi);
-            traiterMessageAttaque("Gagnant=11", DGV_GrilleEnemi);
         }
 
         private void BTN_Placer_Click(object sender, EventArgs e)
@@ -452,6 +449,8 @@ namespace BattleShipVue
                 }
             }
         }
+
+
 
     }
 }

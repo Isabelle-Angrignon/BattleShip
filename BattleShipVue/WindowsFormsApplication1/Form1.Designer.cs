@@ -212,7 +212,7 @@
             this.Name = "MainFrame";
             this.Text = "Form1";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFrame_FormClosing);
-            this.Load += new System.EventHandler(this.MainFrame_Load);
+            this.Shown += new System.EventHandler(this.MainFrame_Shown);
             ((System.ComponentModel.ISupportInitialize)(this.DGV_MaGrille)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
