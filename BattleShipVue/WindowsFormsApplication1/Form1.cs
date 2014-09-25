@@ -28,33 +28,14 @@ namespace BattleShipVue
         public static string[] headerY = new string[DIMENSION_GRILLE_Y] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
         public const int DIMENSION_GRILLE_X = 10;
         public const int DIMENSION_GRILLE_Y = 10;
+
+
         public MainFrame()
         {
             InitializeComponent();
             InitTheGrid(DGV_MaGrille);
             InitTheGrid(DGV_GrilleEnemi);
             maFlotte = new Flotte();
-            comm = new CommClients("127.0.0.1", 8888);
-        }
-
-
-        private void MainFrame_Shown(object sender, EventArgs e)
-        {
-
-            nomJoueur = comm.nom;
-            ecrireAuLog("Bonjour" + nomJoueur + " ! ");
-            if (nomJoueur == "joueur1")
-            {
-                ecrireAuLog("En attente du joueur " + nomEnemi + " pour commencer la partie... ");
-            }
-            String reponse = comm.Communiquer("Commencer partie");
-
-            if (reponse == "Attendre")
-            {
-                ecrireAuLog("En attente du joueur " + nomEnemi + "pour qu'il place ses bateaux... ");
-                comm.Communiquer("Ok");
-            }
-            debutDuTour("Placer bateaux");
             debutPlacerFlotte();
         }
 
@@ -72,7 +53,6 @@ namespace BattleShipVue
         }
         private void debutPlacerFlotte()
         {
-            ecrireAuLog("À votre tour de placer vos bateaux !");
             placerProchainBateau();
         }
         private void placerBateaux(Navire navire)
@@ -202,6 +182,21 @@ namespace BattleShipVue
             BTN_Placer.Enabled = false;
             BTN_Attaquer.Enabled = true;
             DGV_MaGrille.Enabled = false;
+
+            comm = new CommClients("172.17.104.103", 8888);
+            nomJoueur = comm.nom;
+            ecrireAuLog("Bonjour" + nomJoueur + " ! ");
+            if (nomJoueur == "Joueur1")
+            {
+                ecrireAuLog("En attente de votre adversaire pour commencer la partie... ");
+            }
+            String reponse = comm.Communiquer("Commencer partie");
+
+            if (reponse == "Attendre")
+            {
+                comm.Communiquer("Ok");
+            }
+
         }
 
         private void BTN_Placer_Click(object sender, EventArgs e)
@@ -344,7 +339,7 @@ namespace BattleShipVue
             string x = DGV_GrilleEnemi.SelectedCells[0].ColumnIndex.ToString();
             string y = DGV_GrilleEnemi.SelectedCells[0].RowIndex.ToString();
             String reponse = comm.Communiquer("Attaque=" + x + y);
-            debutDuTour("Attaquer");
+            debutDuTour();
 
             return "jambon";
         }
@@ -363,23 +358,15 @@ namespace BattleShipVue
         {
             finDuTour();
             //            String reponse = Comm.EnvoyerMessage("Flotte=" + maFlotte.ToString()); //////////////////////////////////////////////////////
-            debutDuTour("Attaquer");
+            debutDuTour();
 
             return "Message qui nest pas supposer etre la car il faut enlever le commentaire";
         }
 
-        private void debutDuTour(string nomTour)
+        private void debutDuTour()
         {
-            if(nomTour == "Placer bateaux")
-            {
-                DGV_MaGrille.Enabled = true;
-                BTN_Placer.Enabled = true;
-            }
-            else if (nomTour == "Attaquer")
-            {
-                DGV_GrilleEnemi.Enabled = true;
-                BTN_Attaquer.Enabled = true;
-            }
+            DGV_GrilleEnemi.Enabled = true;
+            BTN_Attaquer.Enabled = true;
             
             ecrireAuLog("Début de votre tour !");
         }
