@@ -190,12 +190,7 @@ namespace BattleShipVue
             {
                 ecrireAuLog("En attente de votre adversaire pour commencer la partie... ");
             }
-            String reponse = comm.Communiquer("Commencer partie");
-
-            if (reponse == "Attendre")
-            {
-                comm.Communiquer("Ok");
-            }
+            String resultat = envoyerFlotte();
 
         }
 
@@ -341,7 +336,7 @@ namespace BattleShipVue
             String reponse = comm.Communiquer("Attaque=" + x + y);
             debutDuTour();
 
-            return "jambon";
+            return reponse;
         }
 
         private Pos convertStringToPos(String aConvertir)
@@ -357,10 +352,10 @@ namespace BattleShipVue
         private String envoyerFlotte()
         {
             finDuTour();
-            //            String reponse = Comm.EnvoyerMessage("Flotte=" + maFlotte.ToString()); //////////////////////////////////////////////////////
+            String reponse = comm.Communiquer("Flotte:" + maFlotte.ToString()); 
             debutDuTour();
 
-            return "Message qui nest pas supposer etre la car il faut enlever le commentaire";
+            return reponse;
         }
 
         private void debutDuTour()
