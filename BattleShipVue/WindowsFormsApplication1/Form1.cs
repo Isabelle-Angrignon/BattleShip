@@ -37,7 +37,7 @@ namespace BattleShipVue
         }
         private void MainFrame_Load(object sender, EventArgs e)
         {
-            comm = new CommClients("172.17.104.103", 8888);
+            comm = new CommClients("127.0.0.1", 8888);
 
             nomJoueur = comm.nom;
             ecrireAuLog("Bonjour" + nomJoueur + " ! ");

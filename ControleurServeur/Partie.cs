@@ -34,7 +34,7 @@ namespace ControleurServeur
             _flotteAttaquee = _flotte2;            
             _partieEstFinie = false;
             _tourPremierJoueur = true;
-            _comVersClient = new CommunicationServeur("127.0.0.1", 8088);
+            _comVersClient = new CommunicationServeur("127.0.0.1", 8888);
             _attaquant = 1;
         }
 

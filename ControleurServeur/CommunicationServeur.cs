@@ -13,7 +13,7 @@ namespace CommServeur
         Socket sockConn;
         Socket sockJoueur1 = null;
         Socket sockJoueur2 = null;
-        private int nbJoueurConnecter = 0;
+        private int nbJoueurConnecter = 2;
         static byte[] Buffer { get; set; }
         bool J1Connecter = false;
         bool J2Connecter = false;
@@ -56,6 +56,7 @@ namespace CommServeur
                 sockJoueur1 = sockConn.Accept();
                 J1Connecter = true;
                 EnvoyerMessage(1,"Joueur1");
+                nbJoueurConnecter--;
 
                 if (NbJoueurAConnecter == 2)
                 {
@@ -63,14 +64,16 @@ namespace CommServeur
                     sockJoueur2 = sockConn.Accept();
                     J2Connecter = true;
                     EnvoyerMessage(2, "Joueur2");
+                    nbJoueurConnecter--;
                 }
             }
-            else if (NbJoueurAConnecter >= 1 && NbJoueurAConnecter <= 2)
+            else if (NbJoueurAConnecter == 2 && nbJoueurConnecter == 1)
             {
                 sockConn.Listen(1);
                 sockJoueur2 = sockConn.Accept();
                 J2Connecter = true;
                 EnvoyerMessage(2, "Joueur2");
+                nbJoueurConnecter--;
             }
             else
             {
