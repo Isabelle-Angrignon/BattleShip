@@ -28,6 +28,22 @@ namespace FlotteDLL
             {
                 this._flotte[noNav] = new Navire(TAILLESNAVIRES[noNav], NOMSNAVIRES[noNav]);
             }
+
+            initGrille();
+
+        }
+
+        //initialiser la grille avec des ""
+        private void initGrille()
+        {
+            for (int i = 0; i < FORMAT; ++i)
+            {
+                for (int j = 0; j < FORMAT; ++j)
+                {
+
+                    _grille[i, j] = "";
+                }
+            }
         }
 
 
