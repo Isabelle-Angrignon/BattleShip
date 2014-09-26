@@ -441,9 +441,6 @@ namespace BattleShipVue
             traiterMessageAttaque(reponse, DGV_GrilleEnemi);
             String attaqueEnemi = comm.Communiquer("Ok");
             traiterMessageAttaque(attaqueEnemi, DGV_MaGrille);
-            
         }
-
-
     }
 }
