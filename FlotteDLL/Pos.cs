@@ -26,11 +26,17 @@ namespace FlotteDLL
             _estTouche = false;
         }
 
-        // Exemple de format:  A1  J10
+        // Exemple de format:  A1  J10 pour affichage au client
         public override string ToString()
         {             
             int noLigne = _y + 1;
             return colonnes[_x] + noLigne;
-        }        
+        }
+        // Pour envoi des positions au serveur
+        public string ToPos()
+        {
+            return _x.ToString() + _y.ToString();
+        }
+       
     }
 }

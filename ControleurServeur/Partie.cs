@@ -113,7 +113,7 @@ namespace ControleurServeur
         Pos stringToPos(String tir)
         {
             Pos p = new Pos();
-            p._x = int.Parse(tir[0].ToString());
+            p._x = int.Parse(tir[0].ToString());//////// bug ici.....
             p._y = int.Parse(tir[1].ToString());
             return p;
         }
@@ -323,6 +323,7 @@ namespace ControleurServeur
                 int comptePos = 0;
                 foreach (String coord in tabPos)
                 {
+
                     f._flotte[compteNav]._pos[comptePos] = stringToPos(coord);
                     ++comptePos;
                 }
