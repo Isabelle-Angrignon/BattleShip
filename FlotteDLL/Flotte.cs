@@ -40,13 +40,14 @@ namespace FlotteDLL
 
         }
 
+        //Flotte complete: noms et pos (format numérique)
         public override string ToString()
         {
             String flotte = "";
             //jusqu'à lAvant dernier, il y a une virgule.
             for (int nav = 0; nav < this._flotte.Length; ++nav)
             {
-                flotte += this._flotte[nav].ToString();
+                flotte += this._flotte[nav].ToPos();
             }
             return flotte;
         }

@@ -64,5 +64,18 @@ namespace FlotteDLL
 
             return navire;
         }
+        public string ToPos()
+        {
+            String navire = this.getNom() + "=";
+            //jusqu'à lAvant dernier, il y a une virgule.
+            for (int p = 0; p < this._pos.Length - 1; ++p)
+            {
+                navire += this._pos[p].ToPos() + ",";
+            }
+            //La derniere pos...
+            navire += this._pos[this._pos.Length - 1].ToPos() + ";";
+
+            return navire;
+        }
     }
 }
