@@ -185,7 +185,7 @@ namespace BattleShipVue
 
             comm = new CommClients("172.17.104.103", 8888);
             nomJoueur = comm.nom;
-            ecrireAuLog("Bonjour" + nomJoueur + " ! ");
+            ecrireAuLog("Bonjour " + nomJoueur + " ! ");
 
             envoyerFlotte();
         }
