@@ -12,6 +12,16 @@ using CommClient;
 
 namespace BattleShipVue
 {
+
+    /// ///////////////////////////////////////////////////////////////////////////////////////
+    /// Regler la fin + début du tour qui se répete
+    /// Ajouter Couler bateau dans le log
+    /// Ajouter toucher bateau dans le log
+    /// Lorsque la selection est vide pour placer un bateau, ne pas bug
+
+
+
+
     public partial class MainFrame : Form
     { 
         // Private
@@ -265,18 +275,26 @@ namespace BattleShipVue
             {
                 switch(message[0])
                 {
-                    case "Manqué": 
+                    case "Manque": 
                         Pos position = convertStringToPos(message[1]);
                         dgvConcerne.Rows[position._y].Cells[position._x].Style.BackColor = Color.Yellow;
                         ecrireAuLog("Attaque manqué à la case : " + position._x.ToString() + ";" + position._y.ToString());
                         return;
 
-                    case "Touché":
+                    case "Touche":
                         bateauEstTouche(message[1], dgvConcerne);
                         return;
 
-                    case "Coullé": 
-                        coullerNavire(message[1],dgvConcerne);
+                    case "Coule":
+                        if(dgvConcerne.Name == "DGV_MaGrille")
+                        {
+                            coulerMonNavire(message[1], dgvConcerne);
+                        }
+                        else
+                        {
+                            coulerNavireEnemi(message[2], dgvConcerne);
+                        }
+                        
                         return;
 
                     case "Gagnant":
@@ -297,7 +315,8 @@ namespace BattleShipVue
             }
             else
             {
-                ecrireAuLog("Erreur ! Nombre de paramêtre insufisant dans le message du serveur.");
+                if (message[0] != "Attaque")
+                    ecrireAuLog("Erreur ! Nombre de paramêtre insufisant dans le message du serveur.");
             }
                 
         }
@@ -307,9 +326,22 @@ namespace BattleShipVue
             Pos pos = convertStringToPos(position);
             dgvConcerne.Rows[pos._y].Cells[pos._x].Style.BackColor = Color.Tomato;
         }
-        private void coullerNavire(String nomNavire, DataGridView dgv)
+
+        private void coulerNavireEnemi(String navire, DataGridView dgv)
+        {
+          //  String[] navireEnemi = navire.Split('=');
+       //     string nomNavire = navireEnemi[0];
+            String[] posDuNavire = navire.Split(',');
+
+            foreach(String pos in posDuNavire)
+            {
+                dgv.Rows[int.Parse(pos[1].ToString())].Cells[int.Parse(pos[0].ToString())].Style.BackColor = Color.Red;
+            }
+        }
+        private void coulerMonNavire(String nomNavire, DataGridView dgv)
         {
             bool estTrouve = false;
+
             foreach(Navire nav in maFlotte._flotte)
             {
                 if(nav._nom == nomNavire)
@@ -332,7 +364,7 @@ namespace BattleShipVue
             finDuTour();
             string x = DGV_GrilleEnemi.SelectedCells[0].ColumnIndex.ToString();
             string y = DGV_GrilleEnemi.SelectedCells[0].RowIndex.ToString();
-            String reponse = comm.Communiquer("Attaque=" + x + y);
+            String reponse = comm.Communiquer(x + y);
             debutDuTour();
 
             return reponse;
@@ -439,7 +471,9 @@ namespace BattleShipVue
         {
             String reponse = attaquer();
             traiterMessageAttaque(reponse, DGV_GrilleEnemi);
+            finDuTour();
             String attaqueEnemi = comm.Communiquer("Ok");
+            debutDuTour();
             traiterMessageAttaque(attaqueEnemi, DGV_MaGrille);
         }
     }
