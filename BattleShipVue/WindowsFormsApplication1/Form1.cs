@@ -183,7 +183,7 @@ namespace BattleShipVue
             BTN_Attaquer.Enabled = true;
             DGV_MaGrille.Enabled = false;
 
-            comm = new CommClients("172.17.104.103", 8888);
+            comm = new CommClients("127.0.0.1", 8888);
             nomJoueur = comm.nom;
             ecrireAuLog("Bonjour" + nomJoueur + " ! ");
 

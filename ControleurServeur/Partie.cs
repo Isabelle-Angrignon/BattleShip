@@ -34,7 +34,7 @@ namespace ControleurServeur
             _flotteAttaquee = _flotte2;
             _partieEstFinie = false;
             _tourPremierJoueur = true;
-            _comVersClient = new CommunicationServeur("127.0.0.1", 8088);
+            _comVersClient = new CommunicationServeur("127.0.0.1", 8888);
             _attaquant = 1;
         }
 
@@ -43,28 +43,32 @@ namespace ControleurServeur
             //démarrer le commServeur
             _comVersClient.Connection(2);
 
-            _comVersClient.LireMessage(1);
-            _comVersClient.LireMessage(2);
+            //_comVersClient.LireMessage(1);
+            //_comVersClient.LireMessage(2);
 
             //////////////   JOUEUR 1   ///////////
             //envoyer message placez btx j1...
-            _comVersClient.EnvoyerMessage(1, "Placer");
-            _comVersClient.EnvoyerMessage(2, "Attendre");
+            //_comVersClient.EnvoyerMessage(1, "Placer");
+            //_comVersClient.EnvoyerMessage(2, "Attendre");
             //attendre client            
             String flotteJ1 = _comVersClient.LireMessage(1);
+            System.Console.WriteLine("Flotte 1 recue");
             //Interpréter le messagge contient flotte: reconstruit l'objet
             _flotte1 = lireFlotte(flotteJ1);
+            System.Console.WriteLine("Flotte 1 traitee");
 
             //////////////   JOUEUR 2   ///////////
-            _comVersClient.LireMessage(2);
+            //_comVersClient.LireMessage(2);
             //envoyer message placez btx j2...
-            _comVersClient.EnvoyerMessage(2, "Placer");
-            _comVersClient.EnvoyerMessage(1, "Attendre");
+            //_comVersClient.EnvoyerMessage(2, "Placer");
+            //_comVersClient.EnvoyerMessage(1, "Attendre");
             //attendre client            
             String flotteJ2 = _comVersClient.LireMessage(2);
+            System.Console.WriteLine("Flotte 2 recue");
             //Interpréter le messagge contient flotte: reconstruit l'objet
             _flotte2 = lireFlotte(flotteJ2);
-            _comVersClient.LireMessage(1);
+            System.Console.WriteLine("Flotte 2 traitee");
+            //_comVersClient.LireMessage(1);
         }
 
         public void demarrer()
