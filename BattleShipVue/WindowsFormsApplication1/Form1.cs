@@ -294,14 +294,12 @@ namespace BattleShipVue
 
                     case "Gagnant":
                         bateauEstTouche(message[1], dgvConcerne);
-                        ecrireAuLog("Vous avez gagnez ! ");
-                        TB_Log.BackColor = Color.Green;
+                        partieGagner();
                         return;
 
                     case "Perdant":
                         bateauEstTouche(message[1], dgvConcerne);
-                        ecrireAuLog("Vous avez perdu ! Meilleure chance la prochaine fois ! =) ");
-                        TB_Log.BackColor = Color.Red;
+                        partiePerdu();
                         return;
                     
                     default: 
@@ -316,6 +314,20 @@ namespace BattleShipVue
                 
         }
 
+        private void partieGagner()
+        {
+            ecrireAuLog("Vous avez gagnez ! ");
+            TB_Log.BackColor = Color.Green;
+            BTN_Placer.Enabled = false;
+            DGV_GrilleEnemi.Enabled = false;
+        }
+        private void partiePerdu()
+        {
+            ecrireAuLog("Vous avez perdu ! Meilleure chance la prochaine fois ! =) ");
+            TB_Log.BackColor = Color.Red;
+            BTN_Placer.Enabled = false;
+            DGV_GrilleEnemi.Enabled = false;
+        }
         private void bateauEstTouche(string position, DataGridView dgvConcerne)
         {
             if (position.Length == 2)
