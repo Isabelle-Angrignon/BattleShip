@@ -3,3 +3,8 @@ C:\Users\Isabelle\Documents\GitHub\BattleShip\FlotteDLL\bin\Debug\FlotteDLL.pdb
 C:\Users\Isabelle\Documents\GitHub\BattleShip\FlotteDLL\obj\Debug\FlotteDLL.dll
 C:\Users\Isabelle\Documents\GitHub\BattleShip\FlotteDLL\obj\Debug\FlotteDLL.pdb
 C:\Users\Isabelle\Documents\GitHub\BattleShip\FlotteDLL\obj\Debug\FlotteDLL.csprojResolveAssemblyReference.cache
+D:\Client-Serveur\BattleShip\FlotteDLL\bin\Debug\FlotteDLL.dll
+D:\Client-Serveur\BattleShip\FlotteDLL\bin\Debug\FlotteDLL.pdb
+D:\Client-Serveur\BattleShip\FlotteDLL\obj\Debug\FlotteDLL.csprojResolveAssemblyReference.cache
+D:\Client-Serveur\BattleShip\FlotteDLL\obj\Debug\FlotteDLL.dll
+D:\Client-Serveur\BattleShip\FlotteDLL\obj\Debug\FlotteDLL.pdb
