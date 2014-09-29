@@ -37,8 +37,17 @@ namespace CommClient
         /// <returns></returns>
         public String Communiquer(String Message)
         {
-            EnvoyerMessage(Message);
-            return LireMessage();
+            string reponse = "";
+            try
+            {
+                EnvoyerMessage(Message);
+                reponse = LireMessage();
+            }
+            catch(Exception e)
+            {
+
+            }
+            return reponse;
         }
 
         private String LireMessage()

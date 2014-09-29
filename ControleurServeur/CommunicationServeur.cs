@@ -97,8 +97,6 @@ namespace CommServeur
             sock.Bind(Iep);
         }
 
-
-
         /// <summary>
         /// Permet d'envoyer un message à un client 
         /// </summary>
@@ -116,7 +114,6 @@ namespace CommServeur
                 throw new Exception("Vous devez lire le message du joueur 1 avant de lui envoyer un nouveau message ");
             }
 
-
             if (numeroJoueur == 2 && J2EnvoiBloque == false)
             {
                 EnvoyerMessage(sockJoueur2, Message);
@@ -126,8 +123,6 @@ namespace CommServeur
             {
                 throw new Exception("Vous devez lire le message du joueur 2 avant de lui envoyer un nouveau message ");
             }
-
-
 
             if ( numeroJoueur != 1 && numeroJoueur != 2)
             {
@@ -144,8 +139,15 @@ namespace CommServeur
         /// <param name="Message">Le message a envoyer</param>
         private void EnvoyerMessage(Socket sock, String Message)
         {
-            byte[] data = Encoding.ASCII.GetBytes(Message);
-            sock.Send(data);
+            try
+            {
+                byte[] data = Encoding.ASCII.GetBytes(Message);
+                sock.Send(data);
+            }
+            catch(Exception e)
+            {
+
+            }
         }
 
         public String LireMessage(int numeroJoueur)
@@ -161,7 +163,6 @@ namespace CommServeur
                 throw new Exception("Il n'y a rien a lire pour le joueur 1 ");
             }
 
-
             if (numeroJoueur == 2 && J2EnvoiBloque == true)
             {
                 Reponse = LireMessage(sockJoueur2);
@@ -171,8 +172,6 @@ namespace CommServeur
             {
                 throw new Exception("Il n'y a rien a lire pour le joueur 2 ");
             }
-
-
 
             if (numeroJoueur != 1 && numeroJoueur != 2)
             {
@@ -184,22 +183,25 @@ namespace CommServeur
         private String LireMessage(Socket sock)
         {
             String Reponse = "";
-            while (Reponse == "")
+            try
             {
-                Buffer = new byte[sock.SendBufferSize];
-                int bytesRead = sock.Receive(Buffer);
-                byte[] formatted = new byte[bytesRead];
-                for (int i = 0; i < bytesRead; i++)
+                while (Reponse == "")
                 {
-                    formatted[i] = Buffer[i];
+                    Buffer = new byte[sock.SendBufferSize];
+                    int bytesRead = sock.Receive(Buffer);
+                    byte[] formatted = new byte[bytesRead];
+                    for (int i = 0; i < bytesRead; i++)
+                    {
+                        formatted[i] = Buffer[i];
+                    }
+                    Reponse = Encoding.ASCII.GetString(formatted);
                 }
-                Reponse = Encoding.ASCII.GetString(formatted);
+            }
+            catch(Exception e)
+            {
+
             }
             return Reponse;
         }
-
-
-       
-
     }
 }
