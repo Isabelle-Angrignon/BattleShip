@@ -13,15 +13,6 @@ using CommClient;
 namespace BattleShipVue
 {
 
-    /// ///////////////////////////////////////////////////////////////////////////////////////
-    /// Regler la fin + début du tour qui se répete
-    /// Ajouter Couler bateau dans le log
-    /// Ajouter toucher bateau dans le log
-    /// Lorsque la selection est vide pour placer un bateau, ne pas bug
-
-
-
-
     public partial class MainFrame : Form
     { 
         // Private
@@ -82,7 +73,10 @@ namespace BattleShipVue
             }
             else
             {
-                // ENVOYER UN MESSAGE AU SERVEUR POUR LUI DIRE QUE JE QUITTE
+                if (comm != null)
+                {
+                    comm.Communiquer("Quitte");
+                }
             }
 
         }
@@ -278,7 +272,7 @@ namespace BattleShipVue
                     case "Manque": 
                         Pos position = convertStringToPos(message[1]);
                         dgvConcerne.Rows[position._y].Cells[position._x].Style.BackColor = Color.Yellow;
-                        ecrireAuLog("Attaque manqué à la case : " + position._x.ToString() + ";" + position._y.ToString());
+                        ecrireAuLog("Attaque manquée à la case : " + position._x + ";" + position._y);
                         return;
 
                     case "Touche":
@@ -293,6 +287,7 @@ namespace BattleShipVue
                         else
                         {
                             coulerNavireEnemi(message[2], dgvConcerne);
+                            ecrireAuLog("Le " + message[1] + " enemi est coullé");
                         }
                         
                         return;
@@ -323,14 +318,17 @@ namespace BattleShipVue
 
         private void bateauEstTouche(string position, DataGridView dgvConcerne)
         {
-            Pos pos = convertStringToPos(position);
-            dgvConcerne.Rows[pos._y].Cells[pos._x].Style.BackColor = Color.Tomato;
+            if (position.Length == 2)
+            {
+                Pos pos = convertStringToPos(position);
+                dgvConcerne.Rows[pos._y].Cells[pos._x].Style.BackColor = Color.Tomato;
+
+                ecrireAuLog("Touché à la position: " + pos._x + ";" + pos._y);
+            }
         }
 
         private void coulerNavireEnemi(String navire, DataGridView dgv)
         {
-          //  String[] navireEnemi = navire.Split('=');
-       //     string nomNavire = navireEnemi[0];
             String[] posDuNavire = navire.Split(',');
 
             foreach(String pos in posDuNavire)
@@ -358,14 +356,17 @@ namespace BattleShipVue
             {
                 ecrireAuLog("Le bateau " + nomNavire + " n'est pas coullable car il est introuvable dans la flotte courrante.");
             }
+            else 
+            {
+                ecrireAuLog("Votre " + nomNavire + " est coullé.");
+            }
         }
         private String attaquer()
         {
-            finDuTour();
             string x = DGV_GrilleEnemi.SelectedCells[0].ColumnIndex.ToString();
             string y = DGV_GrilleEnemi.SelectedCells[0].RowIndex.ToString();
             String reponse = comm.Communiquer(x + y);
-            debutDuTour();
+            DGV_GrilleEnemi.ClearSelection();
 
             return reponse;
         }
