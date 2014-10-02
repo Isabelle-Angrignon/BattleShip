@@ -107,17 +107,19 @@ namespace BattleShipVue
         private bool validerConsecutivite(Pos[] tabPos)
         {
             bool estConsecutif = false;
-            int DifferenceX = Math.Abs(tabPos[0]._x - tabPos[tabPos.Length - 1]._x);
-            int DifferenceY = Math.Abs(tabPos[0]._y - tabPos[tabPos.Length - 1]._y);
-
-            // Avec les possibilités de sélection réduit à une seule ligne droite (pas de diagonale),
-            // si la sélection est valide (consécutive), la taille de la selection doit être égal à la différence entre la première
-            // et la dernière case
-            if(DifferenceX + DifferenceY == tabPos.Length - 1)
+            if(tabPos != null)
             {
-                estConsecutif = true;
-            }
+                int DifferenceX = Math.Abs(tabPos[0]._x - tabPos[tabPos.Length - 1]._x);
+                int DifferenceY = Math.Abs(tabPos[0]._y - tabPos[tabPos.Length - 1]._y);
 
+                // Avec les possibilités de sélection réduit à une seule ligne droite (pas de diagonale),
+                // si la sélection est valide (consécutive), la taille de la selection doit être égal à la différence entre la première
+                // et la dernière case
+                if(DifferenceX + DifferenceY == tabPos.Length - 1)
+                {
+                    estConsecutif = true;
+                }
+            }
             return estConsecutif;
         }
         private bool validerPositionUnique(Pos[] tabPos)
