@@ -40,7 +40,7 @@ namespace CommClient
             string reponse = "";
             try
             {
-                EnvoyerMessage(Message);
+            EnvoyerMessage(Message);
                 reponse = LireMessage();
             }
             catch(Exception e)

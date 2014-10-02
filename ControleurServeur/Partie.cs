@@ -25,6 +25,7 @@ namespace ControleurServeur
         CommunicationServeur _comVersClient;
 
 
+        //Constructeur
         public Partie()
         {
             _joueur1 = "Joueur 1";
@@ -42,26 +43,16 @@ namespace ControleurServeur
             //démarrer le commServeur
             _comVersClient.Connection(2);
 
-            //_comVersClient.LireMessage(1);
-            //_comVersClient.LireMessage(2);
-
             //////////////   JOUEUR 1   ///////////
-            //envoyer message placez btx j1...
-            //_comVersClient.EnvoyerMessage(1, "Placer");
-            //_comVersClient.EnvoyerMessage(2, "Attendre");
-            //attendre client            
+            //Recevoir flotte               
             String flotteJ1 = _comVersClient.LireMessage(1);
             System.Console.WriteLine("Flotte 1 recue");
             //Interpréter le messagge contient flotte: reconstruit l'objet
             _flotte1 = lireFlotte(flotteJ1);
             System.Console.WriteLine("Flotte 1 traitee");
 
-            //////////////   JOUEUR 2   ///////////
-            //_comVersClient.LireMessage(2);
-            //envoyer message placez btx j2...
-            //_comVersClient.EnvoyerMessage(2, "Placer");
-            //_comVersClient.EnvoyerMessage(1, "Attendre");
-            //attendre client            
+            //////////////   JOUEUR 2   ///////////            
+            //Recevoir flotte          
             String flotteJ2 = _comVersClient.LireMessage(2);
             System.Console.WriteLine("Flotte 2 recue");
             //Interpréter le messagge contient flotte: reconstruit l'objet
@@ -69,6 +60,7 @@ namespace ControleurServeur
             System.Console.WriteLine("Flotte 2 traitee");
             _flotteAttaquee = _flotte2;
             //_comVersClient.LireMessage(1);
+            //Donner le signal d'attaquer au premier jouer
             _comVersClient.EnvoyerMessage(_attaquant, "Attaque");                                   //send  attaque
         }
 
@@ -79,34 +71,40 @@ namespace ControleurServeur
             //tant que partie pas finie 
             while (!_partieEstFinie)
             {
-                //demander de lancer une torpille;
-                
+                String resultatTir ="";
                 //recevoir une pos recoit un string  retourne une pos
                 String tir = _comVersClient.LireMessage(_attaquant);                                    // lire tir
-                //analyserTir = 
-                String resultatTir = analyserTir(stringToPos(tir));
-                System.Console.WriteLine("résultat tir = " + resultatTir);
+                //vérifier si veut quitter
+                if(veutQuitter(tir))
+                {
+                    _partieEstFinie = true;
+                    System.Console.WriteLine("Abandon du joueur " + _attaquant );                    
+                    alternerJoueur();                    
+                }
+                else
+                { 
+                    //analyserTir = 
+                    resultatTir = analyserTir(stringToPos(tir));
+                    System.Console.WriteLine("résultat tir = " + resultatTir);
+                }
 
                 if (_partieEstFinie)
                 {
                     _comVersClient.EnvoyerMessage(_attaquant, "Gagnant=" + resultatTir);
                     alternerJoueur();
                     _comVersClient.EnvoyerMessage(_attaquant, "Perdant=" + resultatTir);
-                    System.Console.WriteLine("Gagnant = " + _attaquant);
-                    //lire réponse1
-                    //lire réponse2
+                    System.Console.WriteLine("Gagnant = " + _attaquant);                    
                     //redémarrer partie???   
                     //réinitiaiser tout ou ...
                     // System.Diagnostics.Process.Start(Application.ExecutablePath);                    
                 }
                 else
                 {
-                    //avertir les joueurs  retourne le string 
+                    //avertir les joueurs, on retourne le string 
                     _comVersClient.EnvoyerMessage(_attaquant, resultatTir);                                 // send  resultat
                     _comVersClient.LireMessage(_attaquant);                                                 // lire  ok
                     alternerJoueur();                                                                       // switch joueur                
-                    _comVersClient.EnvoyerMessage(_attaquant, resultatTir);                                 // send resultat
-                    
+                    _comVersClient.EnvoyerMessage(_attaquant, resultatTir);                                 // send resultat                    
                 }
                 //on recommence... 
             }
@@ -117,9 +115,20 @@ namespace ControleurServeur
         Pos stringToPos(String tir)
         {
             Pos p = new Pos();
-            p._x = int.Parse(tir[0].ToString());//////// bug ici.....
+            p._x = int.Parse(tir[0].ToString());
             p._y = int.Parse(tir[1].ToString());
             return p;
+        }
+
+        //Vérifie si le joueur a demandé de quitter
+        bool veutQuitter(String message)
+        {
+            bool veutQuitter = false;
+            if (message =="Quitte")
+            {
+                veutQuitter = true;
+            }
+            return veutQuitter;
         }
 
         void alternerJoueur()
@@ -147,13 +156,13 @@ namespace ControleurServeur
             if (CaseTireeEstOccupee(tir))
             {
                 Navire navireAttaque = trouverNavireAttaque(nombateauToucheEst(tir));
-                //marquer touché 
+                //marquer le navire touché 
                 toucherBateau(navireAttaque, tir);
-                //Vérifie si bateau coulé
 
+                //Vérifie si bateau coulé
                 if (bateauEstCoule(navireAttaque))
                 {
-                    //coulerBateau(nombateau, nojoueur)
+                    //marquer le navire coulé
                     navireAttaque._estCoule = true;
                     //Vérifie si tous les bateaux coulés
                     _partieEstFinie = PartieEstTerminee(_flotteAttaquee);
