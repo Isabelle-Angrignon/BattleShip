@@ -496,6 +496,7 @@ namespace BattleShipVue
             traiterMessageAttaque(reponse, DGV_GrilleEnemi);
             finDuTour();
             String attaqueEnemi = comm.Communiquer("Ok");
+            Application.DoEvents();
             debutDuTour();
             traiterMessageAttaque(attaqueEnemi, DGV_MaGrille);
         }
