@@ -39,7 +39,10 @@ namespace BattleShipVue
             maFlotte = new Flotte();
             debutPlacerFlotte();
         }
-
+        /// <summary>
+        /// Cette fonction initialise la grille passé en paramètre en lui ajoutant les headers
+        /// </summary>
+        /// <param name="dgv"></param>
         private void InitTheGrid(DataGridView dgv)
         {
             for (int i = 0; i < DIMENSION_GRILLE_X; ++i)
@@ -56,6 +59,10 @@ namespace BattleShipVue
         {
             placerProchainBateau();
         }
+        /// <summary>
+        /// Cette méthode guide l'usager pour qu'il place un bateau et limite ses actions pour que ça convienne au bateau courant
+        /// </summary>
+        /// <param name="navire"></param>
         private void placerBateaux(Navire navire)
         {
             ecrireAuLog("Veuillez placer votre " + navire._nom + "  (" + navire._pos.Length + ")");
@@ -83,7 +90,7 @@ namespace BattleShipVue
         /// <summary>
         /// Cette fonction prend le texte passer en paramêtre et l'ajoute au log
         /// </summary>
-        /// <param name="text"></param>
+        /// <param name="text">Le texte à ajouter</param>
         private void ecrireAuLog(String text)
         {
             TB_Log.AppendText(text);
@@ -103,7 +110,11 @@ namespace BattleShipVue
 
             return tabPos;
         }
-
+        /// <summary>
+        /// Cette fonction valide la consécutivité des cases sélectionnées
+        /// </summary>
+        /// <param name="tabPos">Tableau de positions à valider</param>
+        /// <returns>Si les positions sont consécutives ou non</returns>
         private bool validerConsecutivite(Pos[] tabPos)
         {
             bool estConsecutif = false;
@@ -122,6 +133,12 @@ namespace BattleShipVue
             }
             return estConsecutif;
         }
+
+        /// <summary>
+        /// Cette fonction valide si les positions passées en paramètre est unique
+        /// </summary>
+        /// <param name="tabPos">Tableau de positions à valider</param>
+        /// <returns>Si les positions sont unique ou non</returns>
         private bool validerPositionUnique(Pos[] tabPos)
         {
             bool estUnique = true;
@@ -151,9 +168,6 @@ namespace BattleShipVue
                 dgv.Rows[p._y].Cells[p._x].Style.BackColor = couleur;
             }
         }
-        private void DGV_MaGrille_MouseUp(object sender, MouseEventArgs e)
-        {
-        }
 
         /// <summary>
         /// Cette fonction affiche à la console usager le bateau qui doit être placé
@@ -181,7 +195,9 @@ namespace BattleShipVue
 
             return estValide;
         }
-
+        /// <summary>
+        /// Cette fonction fait les actions nécéssaires pour envoyer la flotte au serveur et modifier l'interface usager
+        /// </summary>
         private void finPlacerBateaux()
         {
             DGV_GrilleEnemi.Enabled = true;
@@ -195,7 +211,11 @@ namespace BattleShipVue
 
             envoyerFlotte();
         }
-
+        /// <summary>
+        /// Cette méthode valide si les positions sélectionnées et place le bateau dans l'interface usager
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void BTN_Placer_Click(object sender, EventArgs e)
         {
             Pos[] tabPos = posBateauCourant(DGV_MaGrille);
@@ -245,7 +265,11 @@ namespace BattleShipVue
                 ecrireAuLog("Vous devez sélectionner au moins une case pour placer un bateau.");
             }
         }
-
+        /// <summary>
+        /// Cette méthode repart l'application
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void recommencerPartieToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Application.Restart();
@@ -255,7 +279,9 @@ namespace BattleShipVue
         {
             this.Close();
         }
-
+        /// <summary>
+        /// Cette méthode modifie l'interface usager en conséquence de la fin de son tour
+        /// </summary>
         private void finDuTour()
         {
             DGV_GrilleEnemi.Enabled = false;
@@ -267,7 +293,7 @@ namespace BattleShipVue
         }
 
         /// <summary>
-        /// Cette fonction divise 
+        /// Cette fonction divise le message retourné dans le serveur et effectue les actions demandés par le serveur
         /// </summary>
         /// <param name="pos">Le String résultant du serveur suite à une attaque contre ma grille</param>
         private void traiterMessageAttaque(String messageAttaque, DataGridView dgvConcerne)
@@ -338,6 +364,11 @@ namespace BattleShipVue
             BTN_Attaquer.Enabled = false;
             DGV_GrilleEnemi.Enabled = false;
         }
+        /// <summary>
+        /// Cette méthode change la couleur de la case qui a été attaquer et affiche un message au client que le bateau est touchée
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="dgvConcerne"></param>
         private void bateauEstTouche(string position, DataGridView dgvConcerne)
         {
             if (position.Length == 2)
@@ -348,7 +379,11 @@ namespace BattleShipVue
                 ecrireAuLog("Touché à la position: " + pos.ToString());
             }
         }
-
+        /// <summary>
+        /// Cette fonction change la couleur de fond de chaque case que le navire contient
+        /// </summary>
+        /// <param name="navire">les positions du navire, séparées par des virgules</param>
+        /// <param name="dgv">Le datagridView conserné par le navire</param>
         private void coulerNavireEnemi(String navire, DataGridView dgv)
         {
             String[] posDuNavire = navire.Split(',');
@@ -358,6 +393,11 @@ namespace BattleShipVue
                 dgv.Rows[int.Parse(pos[1].ToString())].Cells[int.Parse(pos[0].ToString())].Style.BackColor = Color.Red;
             }
         }
+        /// <summary>
+        /// Cette fonction 
+        /// </summary>
+        /// <param name="nomNavire"></param>
+        /// <param name="dgv"></param>
         private void coulerMonNavire(String nomNavire, DataGridView dgv)
         {
             bool estTrouve = false;
@@ -383,6 +423,10 @@ namespace BattleShipVue
                 ecrireAuLog("Votre " + nomNavire + " est coullé.");
             }
         }
+        /// <summary>
+        /// Cette fonction prend la céllule sélectionnée dans la grille enemi et l'envoye au serveur.
+        /// </summary>
+        /// <returns>La réponse du serveur suite à l'attaque (ex. Touche:52)</returns>
         private String attaquer()
         {
             string x = DGV_GrilleEnemi.SelectedCells[0].ColumnIndex.ToString();
@@ -392,7 +436,11 @@ namespace BattleShipVue
 
             return reponse;
         }
-
+        /// <summary>
+        ///  Cette fonction transforme un String(formatter en Pos) en Pos et retourne le résultat
+        /// </summary>
+        /// <param name="aConvertir">Le String à convertir</param>
+        /// <returns>La position qui à été transformée</returns>
         private Pos convertStringToPos(String aConvertir)
         {
             Pos pos = new Pos();
@@ -403,6 +451,9 @@ namespace BattleShipVue
             }
             return pos;
         }
+        /// <summary>
+        /// Cette méthode envoye la flotte au serveur et transporte la réponse du serveur au contrôleur
+        /// </summary>
         private void envoyerFlotte()
         {
             finDuTour();
@@ -435,7 +486,11 @@ namespace BattleShipVue
 
             e.Handled = true;
         }
-
+        /// <summary>
+        /// Cette fonction gère la sélection dans la grille du joueur courant pour qu'elle soit seulement en ligne.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void DGV_MaGrille_SelectionChanged(object sender, EventArgs e)
         {
             DataGridView dgv = (DataGridView)sender;
@@ -489,7 +544,9 @@ namespace BattleShipVue
         {
             sequenceAttaque();
         }
-
+        /// <summary>
+        /// Cette fonction gère la séquence d'attaque ainsi que les tours du client
+        /// </summary>
         private void sequenceAttaque()
         {
             String reponse = attaquer();
