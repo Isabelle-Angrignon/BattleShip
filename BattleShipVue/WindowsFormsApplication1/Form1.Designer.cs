@@ -75,7 +75,6 @@
             this.DGV_MaGrille.TabIndex = 0;
             this.DGV_MaGrille.RowPrePaint += new System.Windows.Forms.DataGridViewRowPrePaintEventHandler(this.DGV_RowPrePaint);
             this.DGV_MaGrille.SelectionChanged += new System.EventHandler(this.DGV_MaGrille_SelectionChanged);
-            this.DGV_MaGrille.MouseUp += new System.Windows.Forms.MouseEventHandler(this.DGV_MaGrille_MouseUp);
             // 
             // panel1
             // 
