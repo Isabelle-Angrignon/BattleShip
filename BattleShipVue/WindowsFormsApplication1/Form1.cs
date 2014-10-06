@@ -274,7 +274,7 @@ namespace BattleShipVue
                     case "Manque": 
                         Pos position = convertStringToPos(message[1]);
                         dgvConcerne.Rows[position._y].Cells[position._x].Style.BackColor = Color.Yellow;
-                        ecrireAuLog("Attaque manquée à la case : " + position._x + ";" + position._y);
+                        ecrireAuLog("Attaque manquée à la case : " + position.ToString());
                         return;
 
                     case "Touche":
@@ -296,7 +296,7 @@ namespace BattleShipVue
 
                     case "Gagnant":
                         bateauEstTouche(message[1], dgvConcerne);
-                        partieGagner();
+                        partieGagnee();
                         return;
 
                     case "Perdant":
@@ -316,18 +316,19 @@ namespace BattleShipVue
                 
         }
 
-        private void partieGagner()
+        private void partieGagnee()
         {
             ecrireAuLog("Vous avez gagnez ! ");
             TB_Log.BackColor = Color.Green;
-            BTN_Placer.Enabled = false;
+            BTN_Attaquer.Enabled = false;
             DGV_GrilleEnemi.Enabled = false;
         }
         private void partiePerdu()
         {
+            
             ecrireAuLog("Vous avez perdu ! Meilleure chance la prochaine fois ! =) ");
             TB_Log.BackColor = Color.Red;
-            BTN_Placer.Enabled = false;
+            BTN_Attaquer.Enabled = false;
             DGV_GrilleEnemi.Enabled = false;
         }
         private void bateauEstTouche(string position, DataGridView dgvConcerne)
@@ -337,7 +338,7 @@ namespace BattleShipVue
                 Pos pos = convertStringToPos(position);
                 dgvConcerne.Rows[pos._y].Cells[pos._x].Style.BackColor = Color.Tomato;
 
-                ecrireAuLog("Touché à la position: " + pos._x + ";" + pos._y);
+                ecrireAuLog("Touché à la position: " + pos.ToString());
             }
         }
 
