@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Pos.cs
+//Isabelle Angrignon
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +11,7 @@ namespace FlotteDLL
 {
     public class Pos
     {
-        public String[] colonnes;
+        public String[] colonnes; // pour mettre la position en string selon les lettres de colonnes
         public int _x;
         public int _y;
         public bool _estTouche;
@@ -25,6 +28,7 @@ namespace FlotteDLL
             colonnes = new String[] { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J" };
             _estTouche = false;
         }
+
 
         // Exemple de format:  A1  J10 pour affichage au client
         public override string ToString()

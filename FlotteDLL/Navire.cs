@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Navire.cs
+//Isabelle Angrignon
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -51,10 +54,12 @@ namespace FlotteDLL
         {
             this._nom = nom;
         }
+
+        //Format pour l'affichage à la console
         public override string ToString()
         {
             String navire = this.getNom() + "=";
-            //jusqu'à lAvant dernier, il y a une virgule.
+            //jusqu'à l'avant dernier, il y a une virgule.
             for (int p = 0; p < this._pos.Length-1; ++p)
             { 
                 navire += this._pos[p].ToString() +  ","; 
@@ -64,6 +69,8 @@ namespace FlotteDLL
 
             return navire;
         }
+
+        //Format pour l'nevoi de la flotte au serveur
         public string ToPos()
         {
             String navire = this.getNom() + "=";

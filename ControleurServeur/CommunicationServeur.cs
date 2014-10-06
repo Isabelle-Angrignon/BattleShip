@@ -1,4 +1,7 @@
-﻿using System;
+﻿//CommunicationServeur.cs
+//Par Simon Bouchard
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,7 +44,7 @@ namespace CommServeur
         }
         /// <summary>
         /// Attend la connection d'un joueur si un joueur se connecte le met en tant
-        ///  que joueur un ou joueur 2 selon si il est arrivé en premier.
+        ///  que joueur 1 ou joueur 2 selon si il est arrivé en premier.
         /// </summary>
         /// <param name="NbJoueurConnecter">Dis si on veut connecter un joueur ou deux </param>
         public void Connection(int NbJoueurAConnecter)

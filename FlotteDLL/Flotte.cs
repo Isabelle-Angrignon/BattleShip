@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Flotte.cs
+//Isabelle Angrignon
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,13 +11,13 @@ namespace FlotteDLL
 {
     public class Flotte
     {
-        //Définition de la flotte
+        // Définition de la flotte
         const int NBRENAVIRES = 5;
-        String[] NOMSNAVIRES = { "Porte-avions", "Croiseur", "Contre-torpilleur", "Sous-marin", "Torpilleur" };
-        const int FORMAT = 10;
-        int[] TAILLESNAVIRES = { 5, 4, 3, 3, 2 };// va au controleur???
+        String[] NOMSNAVIRES = { "Porte-avions", "Croiseur", "Contre-torpilleur", "Sous-marin", "Torpilleur" };        
+        int[] TAILLESNAVIRES = { 5, 4, 3, 3, 2 };
+        const int FORMAT = 10; // on ne gère pas plus de 10*10
 
-        public String[,] _grille;// contient statut: vide, bateau, manqué, touché ou coulé
+        public String[,] _grille;// contient les noms de bateaux pour repérage rapide: valeur: soit "" ou "nom_bateau" 
         public Navire[] _flotte;
 
 
@@ -56,7 +59,7 @@ namespace FlotteDLL
 
         }
 
-        //Flotte complete: noms et pos (format numérique)
+        //Flotte complete: noms et pos (format numérique des positions envoyé par client au serveur)
         public override string ToString()
         {
             String flotte = "";
