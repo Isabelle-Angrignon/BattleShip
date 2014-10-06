@@ -14,7 +14,7 @@ namespace BattleShipVue
 {
 
     public partial class MainFrame : Form
-    { 
+    {
         // Private
         private int _selectedRow = -1;
         private int _selectedColumn = -1;
@@ -47,9 +47,9 @@ namespace BattleShipVue
                 dgv.Columns.Add(headerY[i], headerY[i]);
             }
             dgv.Rows.Add(DIMENSION_GRILLE_Y - 1);
-            for(int i = 1; i <= DIMENSION_GRILLE_Y; ++i)
+            for (int i = 1; i <= DIMENSION_GRILLE_Y; ++i)
             {
-                dgv.Rows[i-1].HeaderCell.Value = i.ToString();
+                dgv.Rows[i - 1].HeaderCell.Value = i.ToString();
             }
         }
         private void debutPlacerFlotte()
@@ -84,7 +84,7 @@ namespace BattleShipVue
         /// Cette fonction prend le texte passer en paramêtre et l'ajoute au log
         /// </summary>
         /// <param name="text"></param>
-        private void ecrireAuLog(String text )
+        private void ecrireAuLog(String text)
         {
             TB_Log.AppendText(text);
             TB_Log.AppendText(Environment.NewLine);
@@ -107,7 +107,7 @@ namespace BattleShipVue
         private bool validerConsecutivite(Pos[] tabPos)
         {
             bool estConsecutif = false;
-            if(tabPos != null)
+            if (tabPos != null)
             {
                 int DifferenceX = Math.Abs(tabPos[0]._x - tabPos[tabPos.Length - 1]._x);
                 int DifferenceY = Math.Abs(tabPos[0]._y - tabPos[tabPos.Length - 1]._y);
@@ -115,7 +115,7 @@ namespace BattleShipVue
                 // Avec les possibilités de sélection réduit à une seule ligne droite (pas de diagonale),
                 // si la sélection est valide (consécutive), la taille de la selection doit être égal à la différence entre la première
                 // et la dernière case
-                if(DifferenceX + DifferenceY == tabPos.Length - 1)
+                if (DifferenceX + DifferenceY == tabPos.Length - 1)
                 {
                     estConsecutif = true;
                 }
@@ -127,13 +127,13 @@ namespace BattleShipVue
             bool estUnique = true;
 
             // Vérifie si les points sélectionnés correspondent au point d'un bateau déjà placé
-            foreach(Navire navire in maFlotte._flotte)
+            foreach (Navire navire in maFlotte._flotte)
             {
                 foreach (Pos p in tabPos)
                 {
-                    for(int i = 0; i < navire._pos.Length; ++i)
+                    for (int i = 0; i < navire._pos.Length; ++i)
                     {
-                        if(navire._pos[i]._x == p._x && navire._pos[i]._y == p._y)
+                        if (navire._pos[i]._x == p._x && navire._pos[i]._y == p._y)
                         {
                             estUnique = false;
                         }
@@ -171,9 +171,9 @@ namespace BattleShipVue
             bool estValide = true;
             Pos[] tabPos = posBateauCourant(DGV_MaGrille);
 
-            foreach(Navire nav in maFlotte._flotte)
+            foreach (Navire nav in maFlotte._flotte)
             {
-                if(nomBateauCourant == nav._nom && nav._pos.Length != tabPos.Length)
+                if (nomBateauCourant == nav._nom && nav._pos.Length != tabPos.Length)
                 {
                     estValide = false;
                 }
@@ -199,43 +199,50 @@ namespace BattleShipVue
         private void BTN_Placer_Click(object sender, EventArgs e)
         {
             Pos[] tabPos = posBateauCourant(DGV_MaGrille);
-            if (validerConsecutivite(tabPos))
+            if (tabPos.Length > 0)
             {
-                if(validerPositionUnique(tabPos))
+                if (validerConsecutivite(tabPos))
                 {
-                    if(validerSelectionValide())
+                    if (validerPositionUnique(tabPos))
                     {
-                        // Trouver le bateau qui correspond au bateau courant et initialise sa position avec les cases données
-                        foreach(Navire navire in maFlotte._flotte)
+                        if (validerSelectionValide())
                         {
-                            if(navire._nom == nomBateauCourant)
+                            // Trouver le bateau qui correspond au bateau courant et initialise sa position avec les cases données
+                            foreach (Navire navire in maFlotte._flotte)
                             {
-                                navire.placerNavire(tabPos);
-                                ecrireAuLog("Le " + nomBateauCourant + " à été placé ");
-                                setBackgroundColor_of_DGV(DGV_MaGrille, Color.GreenYellow);
-                                DGV_MaGrille.ClearSelection();
+                                if (navire._nom == nomBateauCourant)
+                                {
+                                    navire.placerNavire(tabPos);
+                                    ecrireAuLog("Le " + nomBateauCourant + " à été placé ");
+                                    setBackgroundColor_of_DGV(DGV_MaGrille, Color.GreenYellow);
+                                    DGV_MaGrille.ClearSelection();
+                                }
                             }
+
+                            if (++positionCourante < maFlotte._flotte.Length)
+                                placerProchainBateau();
+                            else
+                                finPlacerBateaux();
+                        }
+                        else
+                        {
+                            ecrireAuLog("Cette sélection n'est pas valide car elle n'est pas de la même grandeur que le bateau que vous devez placer.");
                         }
 
-                        if (++positionCourante < maFlotte._flotte.Length)
-                            placerProchainBateau();
-                        else
-                            finPlacerBateaux();
                     }
                     else
                     {
-                        ecrireAuLog("Cette sélection n'est pas valide car elle n'est pas de la même grandeur que le bateau que vous devez placer.");
+                        ecrireAuLog("Cette sélection n'est pas valide car elle contient une case déjà utilisé.");
                     }
-                 
                 }
                 else
                 {
-                    ecrireAuLog("Cette sélection n'est pas valide car elle contient une case déjà utilisé.");
+                    ecrireAuLog("Cette sélection n'est pas valide car elle n'est pas consécutive.");
                 }
             }
             else
             {
-                ecrireAuLog("Cette sélection n'est pas valide car elle n'est pas consécutive.");
+                ecrireAuLog("Vous devez sélectionner au moins une case pour placer un bateau.");
             }
         }
 
@@ -247,8 +254,8 @@ namespace BattleShipVue
         private void quitterToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
-        } 
-        
+        }
+
         private void finDuTour()
         {
             DGV_GrilleEnemi.Enabled = false;
@@ -267,11 +274,11 @@ namespace BattleShipVue
         {
             String[] message = messageAttaque.Split('=');
 
-            if(message.Length > 1)
+            if (message.Length > 1)
             {
-                switch(message[0])
+                switch (message[0])
                 {
-                    case "Manque": 
+                    case "Manque":
                         Pos position = convertStringToPos(message[1]);
                         dgvConcerne.Rows[position._y].Cells[position._x].Style.BackColor = Color.Yellow;
                         ecrireAuLog("Attaque manquée à la case : " + position.ToString());
@@ -282,7 +289,7 @@ namespace BattleShipVue
                         return;
 
                     case "Coule":
-                        if(dgvConcerne.Name == "DGV_MaGrille")
+                        if (dgvConcerne.Name == "DGV_MaGrille")
                         {
                             coulerMonNavire(message[1], dgvConcerne);
                         }
@@ -291,7 +298,7 @@ namespace BattleShipVue
                             coulerNavireEnemi(message[2], dgvConcerne);
                             ecrireAuLog("Le " + message[1] + " enemi est coullé");
                         }
-                        
+
                         return;
 
                     case "Gagnant":
@@ -303,8 +310,8 @@ namespace BattleShipVue
                         bateauEstTouche(message[1], dgvConcerne);
                         partiePerdu();
                         return;
-                    
-                    default: 
+
+                    default:
                         return;
                 }
             }
@@ -313,7 +320,7 @@ namespace BattleShipVue
                 if (message[0] != "Attaque")
                     ecrireAuLog("Erreur ! Nombre de paramêtre insufisant dans le message du serveur.");
             }
-                
+
         }
 
         private void partieGagnee()
@@ -325,7 +332,7 @@ namespace BattleShipVue
         }
         private void partiePerdu()
         {
-            
+
             ecrireAuLog("Vous avez perdu ! Meilleure chance la prochaine fois ! =) ");
             TB_Log.BackColor = Color.Red;
             BTN_Attaquer.Enabled = false;
@@ -346,7 +353,7 @@ namespace BattleShipVue
         {
             String[] posDuNavire = navire.Split(',');
 
-            foreach(String pos in posDuNavire)
+            foreach (String pos in posDuNavire)
             {
                 dgv.Rows[int.Parse(pos[1].ToString())].Cells[int.Parse(pos[0].ToString())].Style.BackColor = Color.Red;
             }
@@ -355,9 +362,9 @@ namespace BattleShipVue
         {
             bool estTrouve = false;
 
-            foreach(Navire nav in maFlotte._flotte)
+            foreach (Navire nav in maFlotte._flotte)
             {
-                if(nav._nom == nomNavire)
+                if (nav._nom == nomNavire)
                 {
                     foreach (Pos pos in nav._pos)
                     {
@@ -367,11 +374,11 @@ namespace BattleShipVue
                 }
             }
 
-            if(!estTrouve)
+            if (!estTrouve)
             {
                 ecrireAuLog("Le bateau " + nomNavire + " n'est pas coullable car il est introuvable dans la flotte courrante.");
             }
-            else 
+            else
             {
                 ecrireAuLog("Votre " + nomNavire + " est coullé.");
             }
@@ -389,10 +396,10 @@ namespace BattleShipVue
         private Pos convertStringToPos(String aConvertir)
         {
             Pos pos = new Pos();
-            if(aConvertir.Length > 1)
+            if (aConvertir.Length > 1)
             {
-                pos._x = int.Parse(aConvertir.Substring(0,1));
-                pos._y = int.Parse(aConvertir.Substring(1,1));
+                pos._x = int.Parse(aConvertir.Substring(0, 1));
+                pos._y = int.Parse(aConvertir.Substring(1, 1));
             }
             return pos;
         }
@@ -408,7 +415,7 @@ namespace BattleShipVue
         {
             DGV_GrilleEnemi.Enabled = true;
             BTN_Attaquer.Enabled = true;
-            
+
             ecrireAuLog("Début de votre tour !");
         }
         /// <summary>
